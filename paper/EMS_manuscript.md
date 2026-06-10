@@ -44,7 +44,7 @@ OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
 | | |
 |---|---|
 | Current code version | v1.0.0 |
-| Permanent link to code / repository | GitHub repository (URL provided at acceptance); archived on Zenodo with a citable DOI (minted at acceptance) |
+| Permanent link to code / repository | https://github.com/vaspapa79/LakeForcing-OpenDrift (archived on Zenodo with a citable DOI on release) |
 | Permanent link to reproducible capsule | Not applicable |
 | Legal code licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Code versioning system used | git |
@@ -827,7 +827,7 @@ steps.
 | Hardware requirements | Standard workstation; a multi-core CPU is recommended for the Delft3D-FLOW/WAVE runs |
 | Source-code size | approximately 0.2 MB (excluding generated data) |
 | Documentation | Repository README and the present manuscript |
-| Source repository | GitHub (URL provided at acceptance) |
+| Source repository | https://github.com/vaspapa79/LakeForcing-OpenDrift |
 | Permanent archive | Zenodo, citable DOI minted at acceptance |
 | Licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Availability and cost | Free and open source |
@@ -843,9 +843,11 @@ The authors declare that they have no known competing financial interests or per
 relationships that could have appeared to influence the work reported in this paper.
 
 ## Data availability
-The source code and the generated twelve-lake forcing dataset will be made openly available
-on GitHub and archived on Zenodo with a citable DOI upon acceptance. All input datasets
-(HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from their providers.
+The source code is openly available at https://github.com/vaspapa79/LakeForcing-OpenDrift
+under the MIT licence. The generated twelve-lake forcing dataset is archived on Zenodo under
+CC-BY-4.0, with a citable DOI minted on release (DOI to be inserted at acceptance). All
+input datasets (HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from their
+respective providers.
 
 ## Funding
 This research did not receive any specific grant from funding agencies in the public,

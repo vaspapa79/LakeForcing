@@ -16,5 +16,9 @@
     { "name": "Vrochidis, Stefanos", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
     { "name": "Kompatsiaris, Ioannis", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" }
   ],
-  "notes": "TODO before release: set GitHub repo URL; mint version and DOI."
+  "related_identifiers": [
+    { "relation": "isSupplementTo", "identifier": "https://github.com/vaspapa79/LakeForcing-OpenDrift", "scheme": "url" }
+  ],
+  "version": "1.0.0",
+  "notes": "Source code: https://github.com/vaspapa79/LakeForcing-OpenDrift (MIT). This Zenodo record archives the generated twelve-lake forcing dataset (CC-BY-4.0)."
 }

@@ -98,8 +98,9 @@ def build_cover_letter():
          "no competing interests. This research did not receive any specific grant "
          "from funding agencies in the public, commercial, or not-for-profit sectors; "
          "the work was carried out using the existing research infrastructure of "
-         "CERTH-ITI. The source code and the generated dataset will be made openly "
-         "available on GitHub and archived on Zenodo with a citable DOI upon acceptance.")
+         "CERTH-ITI. The source code is openly available at "
+         "https://github.com/vaspapa79/LakeForcing-OpenDrift, and the generated "
+         "forcing dataset is archived on Zenodo with a citable DOI minted on release.")
 
     para("Thank you for your consideration. We look forward to your response.",
          after=14)

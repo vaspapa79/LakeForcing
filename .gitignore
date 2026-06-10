@@ -34,3 +34,6 @@ _*.txt
 *.out
 *.err
 *.tmp
+
+# Packaged dataset for Zenodo (uploaded manually, not via git)
+*_forcing_dataset_*.zip
