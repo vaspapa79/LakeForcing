@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# Large data: archived on Zenodo (generated forcing dataset, CC-BY-4.0) or
+# obtained from the original providers (HydroLAKES, GLOBathy, DAHITI, ERA5).
+# Not redistributed through git.
+# ---------------------------------------------------------------------------
+Lake Data.zip
+models/
+bathymetry/
+output/*
+# keep the two figures the manuscript embeds from output/
+!output/figure_demonstration.png
+!output/figure_vertical_sigma_z.png
+
+# Local working / private files
+Authors.docx
+*.cdsapirc
+*credentials*.json
+.env
+
+# Stray copies and extracted third-party text (don't redistribute manuals/papers)
+*- Copy.docx
+*Copy.docx
+docs/d3dflow_manual_text.txt
+docs/ojce_paper_text.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Scratch / logs
+_*.py
+_*.txt
+*.out
+*.err
+*.tmp

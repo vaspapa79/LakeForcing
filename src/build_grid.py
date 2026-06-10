@@ -1,0 +1,193 @@
+"""
+build_grid.py -- bathymetry -> Delft3D-4 structured grid (.grd/.dep/.enc).
+
+Generates a REGULAR curvilinear grid (axis-aligned in a local UTM) covering a
+lake, interpolates depth onto the grid nodes, and writes the three Delft3D-4
+files plus a <lake>_grid.json with the dims the .mdf needs. No Delft3D engine and
+no licence are involved -- this is pure file generation.
+
+Handles BOTH bathymetry input types in the corpus:
+  --points  lon,lat,depth CSV  (KMZ-derived corpus; depth already positive-down)
+  --raster  bed-ELEVATION GeoTIFF (DAHITI/GEBCO); depth = surface_level - elevation
+            surface_level auto-estimated as the 99th pct of valid bed elevations
+            (the shoreline) unless --surface-level given.
+
+Format verified against the working Polyfytos model:
+  grd  = Mmax x Nmax nodes; 2*Nmax 'ETA=' rows (X block then Y block)
+  dep  = (Mmax+1) x (Nmax+1) values, last row/col dummy -999  (Dpsopt=MAX)
+  mdf  MNKmax = (Mmax+1, Nmax+1)
+
+Usage:
+  python src/build_grid.py --points bathymetry/points/Rotsee_Switzerland8_points.csv \
+      --lake rotsee --res 40
+  python src/build_grid.py --raster bathymetry/dahiti/dahiti_204_bathymetry.tif \
+      --lake mead --res 120
+"""
+from __future__ import annotations
+import argparse, json
+from pathlib import Path
+import numpy as np
+from scipy.interpolate import griddata
+from pyproj import Transformer
+
+MISS_GRD = -9.99999000000000024e2     # grd missing value (matches Polyfytos)
+DRY = -999.0                          # dep land/dry value
+OUTROOT = Path(r"C:/Users/vaspapa/Desktop/LakeForcing_OpenDrift/models")
+
+
+def local_utm_epsg(lon, lat):
+    zone = int((lon + 180) // 6) + 1
+    return (32600 if lat >= 0 else 32700) + zone
+
+
+# --------------------------------------------------------------------------- #
+def load_points(csv):
+    a = np.loadtxt(csv, delimiter=",", skiprows=1)
+    return a[:, 0], a[:, 1], a[:, 2]          # lon, lat, depth(+down)
+
+
+def load_raster(tif, surface_level, max_px=1200):
+    """Decimated read so 400+ MB tifs (Poyang, Fort Peck) don't blow memory."""
+    import rasterio
+    from rasterio.enums import Resampling
+    with rasterio.open(tif) as s:
+        H, W = s.height, s.width
+        scale = max(1, max(H, W) / max_px)
+        oh, ow = int(H / scale), int(W / scale)
+        z = s.read(1, out_shape=(oh, ow), resampling=Resampling.average).astype("f8")
+        transform = s.transform * s.transform.scale(W / ow, H / oh)
+        nod = s.nodata
+        crs = s.crs
+    valid = np.isfinite(z) & (z != nod) if nod is not None else np.isfinite(z)
+    rows, cols = np.where(valid)
+    xs, ys = rasterio.transform.xy(transform, rows, cols)
+    elev = z[rows, cols]
+    # to lon/lat if projected
+    if crs and crs.to_epsg() != 4326:
+        tr = Transformer.from_crs(crs, "EPSG:4326", always_xy=True)
+        lon, lat = tr.transform(np.array(xs), np.array(ys))
+    else:
+        lon, lat = np.array(xs), np.array(ys)
+    if surface_level is None:
+        surface_level = np.percentile(elev, 99)   # ~shoreline
+        print(f"  auto surface_level = {surface_level:.1f} m (99th pct of bed elev)")
+    depth = surface_level - elev                   # positive-down
+    keep = depth > 0                               # wet only
+    return lon[keep], lat[keep], depth[keep]
+
+
+# --------------------------------------------------------------------------- #
+def build_nodes(lon, lat, depth, res_m):
+    """Regular grid in local UTM; interpolate depth onto nodes."""
+    epsg = local_utm_epsg(float(np.mean(lon)), float(np.mean(lat)))
+    tr = Transformer.from_crs("EPSG:4326", f"EPSG:{epsg}", always_xy=True)
+    x, y = tr.transform(lon, lat)
+    x, y = np.asarray(x), np.asarray(y)
+
+    # cap source points for griddata speed (deterministic stride subsample)
+    if x.size > 80000:
+        step = x.size // 80000 + 1
+        x, y, depth = x[::step], y[::step], np.asarray(depth)[::step]
+
+    pad = 2 * res_m
+    gx = np.arange(x.min() - pad, x.max() + pad, res_m)
+    gy = np.arange(y.min() - pad, y.max() + pad, res_m)
+    GX, GY = np.meshgrid(gx, gy)                    # (Np, Mp)
+
+    pts = np.column_stack([x, y])
+    d = griddata(pts, depth, (GX, GY), method="linear")  # NaN outside hull
+    d = np.where(np.isfinite(d) & (d > 0), d, DRY)        # land/dry -> -999
+    return epsg, GX, GY, d
+
+
+# --------------------------------------------------------------------------- #
+def _fmt_block(fh, rows_2d, fmt="% .17E", per=5):
+    """Write an X- or Y-coordinate block as ETA= rows (Nmax rows, Mmax vals)."""
+    Np, Mp = rows_2d.shape
+    for n in range(Np):
+        vals = rows_2d[n]
+        fh.write(f" ETA={n+1:6d}")
+        for i, v in enumerate(vals):
+            if i and i % per == 0:
+                fh.write("\n" + " " * 12)
+            fh.write("  " + (fmt % v))
+        fh.write("\n")
+
+
+def write_grd(path, GX, GY):
+    Np, Mp = GX.shape
+    # store land nodes as missing in the grid too (Delft3D convention)
+    with open(path, "w") as fh:
+        fh.write("* Generated by build_grid.py (LakeForcing-OpenDrift)\n")
+        fh.write("Coordinate System = Cartesian\n")
+        fh.write(f"Missing Value     =   {MISS_GRD:.17E}\n")
+        fh.write(f"{Mp:8d}{Np:8d}\n")
+        fh.write(" 0 0 0\n")
+        _fmt_block(fh, GX)
+        _fmt_block(fh, GY)
+    return Mp, Np
+
+
+def write_dep(path, depth):
+    """depth (Np,Mp) -> dep array (Np+1, Mp+1) with dummy last row/col."""
+    Np, Mp = depth.shape
+    out = np.full((Np + 1, Mp + 1), DRY)
+    out[:Np, :Mp] = depth
+    with open(path, "w") as fh:
+        for n in range(Np + 1):
+            row = out[n]
+            for i, v in enumerate(row):
+                if i and i % 12 == 0:
+                    fh.write("\n")
+                fh.write("  " + ("%.7E" % v))
+            fh.write("\n")
+
+
+def write_enc(path, Mp, Np):
+    """Full rectangular enclosure (1..Mp+1, 1..Np+1); dry interior cells ok."""
+    pts = [(1, 1), (Mp + 1, 1), (Mp + 1, Np + 1), (1, Np + 1), (1, 1)]
+    with open(path, "w") as fh:
+        for k, (m, n) in enumerate(pts):
+            tag = "   *** begin grid enclosure" if k == 0 else ""
+            fh.write(f"{m:6d}{n:6d}{tag}\n")
+
+
+# --------------------------------------------------------------------------- #
+def main():
+    ap = argparse.ArgumentParser()
+    g = ap.add_mutually_exclusive_group(required=True)
+    g.add_argument("--points")
+    g.add_argument("--raster")
+    ap.add_argument("--lake", required=True)
+    ap.add_argument("--res", type=float, required=True, help="grid spacing (m)")
+    ap.add_argument("--surface-level", type=float, default=None,
+                    help="lake surface elevation (m) for raster inputs")
+    args = ap.parse_args()
+
+    if args.points:
+        lon, lat, depth = load_points(args.points)
+    else:
+        lon, lat, depth = load_raster(args.raster, args.surface_level)
+    print(f"{args.lake}: {len(depth)} wet samples, depth {depth.min():.1f}..{depth.max():.1f} m")
+
+    epsg, GX, GY, d = build_nodes(lon, lat, depth, args.res)
+    wet = int((d > 0).sum())
+    print(f"  grid {GX.shape[1]}x{GX.shape[0]} nodes @ {args.res} m (UTM {epsg}); "
+          f"{wet} wet nodes, max depth {d[d>0].max():.1f} m")
+
+    outdir = OUTROOT / args.lake
+    outdir.mkdir(parents=True, exist_ok=True)
+    pre = outdir / args.lake
+    Mp, Np = write_grd(f"{pre}.grd", GX, GY)
+    write_dep(f"{pre}.dep", d)
+    write_enc(f"{pre}.enc", Mp, Np)
+    meta = dict(lake=args.lake, epsg=epsg, res_m=args.res,
+                grd_Mmax=Mp, grd_Nmax=Np, mdf_MNKmax=[Mp + 1, Np + 1],
+                wet_nodes=wet, max_depth_m=float(d[d > 0].max()))
+    (Path(f"{pre}_grid.json")).write_text(json.dumps(meta, indent=2))
+    print(f"  wrote {pre}.grd/.dep/.enc + _grid.json")
+    print(f"  -> .mdf MNKmax = {Mp+1} {Np+1} <layers>")
+
+
+if __name__ == "__main__":
+    main()

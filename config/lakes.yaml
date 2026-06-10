@@ -1,0 +1,162 @@
+# Lake registry for the global forcing dataset.
+# `bathy` = source of bed elevation; `status` tracks build progress.
+# Prototype lake reuses an existing Delft3D model; the rest are built from
+# global open inputs (HydroLAKES polygon + GLOBathy bathymetry + ERA5 wind).
+
+defaults:
+  era5_variables: [10m_u_component_of_wind, 10m_v_component_of_wind,
+                   2m_temperature, surface_solar_radiation_downwards,
+                   mean_sea_level_pressure]
+  wave_model: SWAN            # via Delft3D-WAVE, stationary, wind-forced
+  output_crs: EPSG:4326       # CF NetCDF written in lon/lat for OpenDrift
+
+lakes:
+
+  # ---- Prototype (existing Delft3D model) ----
+  polyfytos:
+    name: Lake Polyfytos (Aliakmonas reservoir)
+    country: Greece
+    centroid: {lon: 21.95, lat: 40.20}
+    type: reservoir
+    regime: shallow-to-moderate, managed, fetch-driven
+    crs: EPSG:32634
+    model_dir: "C:/Users/vaspapa/Desktop/Greek_lakes/Lake Polyfytos"
+    model_prefix: polifitos
+    bathy: existing (xyz survey, UTM-34N)
+    status: prototype-in-progress   # add waves + CF export + OpenDrift demo
+
+  # ---- Mediterranean anchor (existing assets) ----
+  trichonida:
+    name: Lake Trichonida
+    country: Greece
+    centroid: {lon: 21.55, lat: 38.57}
+    type: natural-karstic
+    regime: deep, oligotrophic, low amplitude
+    bathy: EKBY survey (existing)
+    status: planned
+
+  # ---- Global diversity set (build from HydroLAKES + GLOBathy + ERA5) ----
+  erie:
+    name: Lake Erie
+    country: USA/Canada
+    centroid: {lon: -81.2, lat: 42.2}
+    type: great-lake
+    regime: large, temperate, strong wind waves
+    bathy: GLOBathy
+    status: planned
+  victoria:
+    name: Lake Victoria
+    country: Tanzania/Uganda/Kenya
+    centroid: {lon: 33.0, lat: -1.0}
+    type: great-lake
+    regime: tropical, large fetch
+    bathy: GLOBathy
+    status: planned
+  geneva:
+    name: Lake Geneva (Léman)
+    country: Switzerland/France
+    centroid: {lon: 6.55, lat: 46.45}
+    type: peri-alpine
+    regime: deep, elongated, alpine winds
+    bathy: GLOBathy
+    status: planned
+  balaton:
+    name: Lake Balaton
+    country: Hungary
+    centroid: {lon: 17.7, lat: 46.83}
+    type: shallow lowland
+    regime: very shallow, strongly fetch-driven waves
+    bathy: GLOBathy
+    status: planned
+  great_salt_lake:
+    name: Great Salt Lake
+    country: USA
+    centroid: {lon: -112.5, lat: 41.1}
+    type: endorheic saline
+    regime: shallow, hypersaline, large area
+    bathy: GLOBathy
+    status: planned
+  titicaca:
+    name: Lake Titicaca
+    country: Peru/Bolivia
+    centroid: {lon: -69.3, lat: -15.8}
+    type: high-altitude
+    regime: 3800 m a.s.l., deep, large
+    bathy: GLOBathy
+    status: planned
+
+# ---------------------------------------------------------------------------
+# CORPUS BATHYMETRY (from "Lake Data.zip", 2026-06-08)
+# Per-depth KMZ contour layers -> point clouds via src/ingest_bathy_kmz.py.
+# Full machine-readable inventory: bathymetry/inventory.csv
+# Point clouds (lon,lat,depth): bathymetry/points/<lake>_points.csv
+# All are status: bathy-ready (next step: 02_build_grid.py -> .grd/.dep).
+# centroid/max_depth below are MEASURED from the contours.
+# ---------------------------------------------------------------------------
+corpus:
+  balaton:        {country: Hungary,     centroid: {lon: 17.765, lat: 46.866}, max_depth_m: 9,  type: large shallow lowland}
+  baltys:         {country: Lithuania,   centroid: {lon: 25.513, lat: 55.592}, max_depth_m: 6,  type: small}
+  bornos:         {country: Spain,       centroid: {lon: -5.716, lat: 36.808}, max_depth_m: 20, type: reservoir}
+  complex_ireland:{country: Ireland,     centroid: {lon: -7.219, lat: 53.807}, max_depth_m: 11, type: multi-basin complex}
+  complex_lithuania:{country: Lithuania, centroid: {lon: 26.491, lat: 55.505}, max_depth_m: 11, type: multi-basin complex}
+  erken:          {country: Sweden,      centroid: {lon: 18.572, lat: 59.845}, max_depth_m: 20, type: boreal research lake}
+  boulet:         {country: France,      centroid: {lon: -1.641, lat: 48.344}, max_depth_m: 5,  type: small reservoir}
+  aulnes:         {country: France,      centroid: {lon: 4.791,  lat: 43.591}, max_depth_m: 6,  type: shallow pond}
+  grafham:        {country: UK,          centroid: {lon: -0.313, lat: 52.298}, max_depth_m: 15, type: water-supply reservoir}
+  kirchsee:       {country: Germany,     centroid: {lon: 11.619, lat: 47.818}, max_depth_m: 16, type: small deep}
+  bariousses:     {country: France,      centroid: {lon: 1.819,  lat: 45.562}, max_depth_m: 21, type: reservoir}
+  berre:          {country: France,      centroid: {lon: 5.115,  lat: 43.461}, max_depth_m: 10, type: brackish lagoon}
+  thau:           {country: France,      centroid: {lon: 3.626,  lat: 43.405}, max_depth_m: 10, type: coastal lagoon}
+  chammet:        {country: France,      centroid: {lon: 1.994,  lat: 45.721}, max_depth_m: 11, type: reservoir}
+  lough_bunny:    {country: Ireland,     centroid: {lon: -8.933, lat: 53.018}, max_depth_m: 8,  type: karstic}
+  prespa:         {country: Greece,      centroid: {lon: 21.072, lat: 40.738}, max_depth_m: 9,  type: transboundary (partial bathy)}
+  rotsee:         {country: Switzerland, centroid: {lon: 8.312,  lat: 47.069}, max_depth_m: 16, type: meromictic research lake}
+  trasimeno:      {country: Italy,       centroid: {lon: 12.108, lat: 43.140}, max_depth_m: 7,  type: large shallow}
+  varenis:        {country: Lithuania,   centroid: {lon: 24.553, lat: 54.290}, max_depth_m: 8,  type: small}
+
+# Greek lakes in the zip via turtle-encoded contour CSV (not KMZ): Trichonida,
+# Petron, Voulkaria + a Trichonida_Delft3D GIS bundle (shp + Water_Level xls).
+# Already processed in the Greek_lakes project; add a CSV/turtle decoder to
+# ingest uniformly here if wanted.
+#
+# Also in the zip: "Sentinel-2 Images/" = ~22 GB of .SAFE L2A products (one per
+# lake) for chl-a / optical corroboration — NOT extracted (imagery, not bathy).
+
+# ---------------------------------------------------------------------------
+# DAHITI BATHYMETRY (downloaded 2026-06-08, src/dahiti_bathymetry.py)
+# GeoTIFF, EPSG:4326, ~10 m. VALUES = BED ELEVATION (m); depth = surface_level - bed.
+# Files: bathymetry/dahiti/dahiti_<id>_bathymetry.tif  (~2.3 GB total, 14 lakes)
+# Global spread chosen to complement the European/Greek corpus.
+# ---------------------------------------------------------------------------
+dahiti:
+  1374:  {name: Dead Sea,        country: Jordan/Israel,   lon: 35.50, lat: 31.52, note: hypersaline, below sea level}
+  13705: {name: Sea of Galilee,  country: Israel,          lon: 35.59, lat: 32.81, note: freshwater, below sea level}
+  118:   {name: Mosul Dam,       country: Iraq,            lon: 42.77, lat: 36.73, note: Tigris reservoir}
+  204:   {name: Lake Mead,       country: USA,             lon: -114.49, lat: 36.14, note: large reservoir}
+  71:    {name: Salton Sea,      country: USA,             lon: -115.82, lat: 33.31, note: endorheic saline}
+  11112: {name: Fort Peck Lake,  country: USA,             lon: -106.44, lat: 47.96, note: large Missouri reservoir}
+  11521: {name: Enriquillo,      country: Dominican Rep,   lon: -71.62, lat: 18.46, note: Caribbean hypersaline, below sea level}
+  228:   {name: Poyang,          country: China,           lon: 116.27, lat: 29.09, note: large floodplain lake}
+  233:   {name: Siling Co,       country: China (Tibet),   lon: 88.94,  lat: 31.78, note: high-altitude plateau}
+  13610: {name: Naivasha,        country: Kenya,           lon: 36.34, lat: -0.77, note: rift freshwater}
+  13220: {name: Nakuru,          country: Kenya,           lon: 36.09, lat: -0.36, note: rift saline}
+  1472:  {name: Lagdo,           country: Cameroon,        lon: 13.85, lat: 8.94,  note: tropical reservoir}
+  64:    {name: Eucumbene,       country: Australia,       lon: 148.72, lat: -36.06, note: alpine reservoir}
+  10341: {name: Forggensee,      country: Germany,         lon: 10.74, lat: 47.63, note: alpine, near corpus}
+  10351: {name: Nova Ponte,      country: Brazil,          lon: -47.38, lat: -19.13, note: tropical reservoir (S. America)}
+  4475:  {name: Tunas Grandes,   country: Argentina,       lon: -62.43, lat: -35.99, note: pampas lake (S. America)}
+  606:   {name: Massingir,       country: Mozambique,      lon: 32.04, lat: -23.88, note: southern Africa reservoir}
+  11576: {name: Gilgel Gibe III, country: Ethiopia,        lon: 37.42, lat: 6.87,  note: E. African highland reservoir}
+  # 53 more available via: src/dahiti_bathymetry.py --download <id...>
+  #   (full list in bathymetry/dahiti/bathymetry_targets.json)
+
+# ---------------------------------------------------------------------------
+# GEBCO_2024 big-lake subsets (src/gebco_subset.py, /vsicurl/ windowed read).
+# Files: bathymetry/gebco/gebco_<name>.tif  (elevation m, a.s.l. datum).
+# ONLY lakes with REAL incorporated bathymetry kept (verified interior std>0):
+#   Geneva + Victoria were FLAT-FILLED at surface in GEBCO -> rejected
+#   (use national surveys / White-Nile HRBS for those).
+# ---------------------------------------------------------------------------
+gebco:
+  baikal:   {name: Lake Baikal,   country: Russia,    lon: 106.9, lat: 53.5, deepest_bed_m: -1198, note: deepest lake on Earth}
+  superior: {name: Lake Superior, country: USA/Canada, lon: -87.5, lat: 47.7, deepest_bed_m: -326,  note: largest freshwater lake by area}

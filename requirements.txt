@@ -1,0 +1,20 @@
+# LakeForcing-OpenDrift -- Python dependencies (conda-forge recommended).
+# Tested in a Python 3.11 environment alongside Delft3D 4.07.01 (FLOW + WAVE/SWAN),
+# which is installed separately (https://oss.deltares.nl/web/delft3d).
+opendrift==1.14.9
+xarray
+numpy
+scipy
+pyproj
+rasterio
+netCDF4
+cdsapi            # ERA5 download (Copernicus CDS; needs ~/.cdsapirc)
+matplotlib
+pyyaml
+# optional, used by some ingest utilities
+geopandas
+# figures + manuscript build (src/make_figures.py, src/build_docx.py)
+cartopy           # global location map
+cmocean           # perceptual colormaps
+python-docx       # assemble the .docx manuscript
+Pillow            # image sizing for embedded figures/equations

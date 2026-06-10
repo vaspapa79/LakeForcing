@@ -1,0 +1,20 @@
+{
+  "title": "LakeForcing-OpenDrift: an open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models",
+  "description": "Open Python pipeline that assembles bathymetry (HydroLAKES/GLOBathy/DAHITI) and ERA5 meteorology, auto-configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE simulation for any inland lake, and exports CF-compliant NetCDF that drives the OpenDrift particle tracker. Core contribution: a sigma-layer to z-level coupling. Includes generated forcing for 12 demonstration lakes on all inhabited continents.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "inland lakes", "Delft3D", "OpenDrift", "Lagrangian transport",
+    "wave forcing", "hydrodynamic modelling", "reproducible pipeline", "ERA5"
+  ],
+  "creators": [
+    { "name": "Papaioannou, Vassilios", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Anagnostopoulos, Christos", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Moumtzidou, Anastasia", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Gialampoukidis, Ilias", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Vrochidis, Stefanos", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Kompatsiaris, Ioannis", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" }
+  ],
+  "notes": "TODO before release: set GitHub repo URL; mint version and DOI."
+}

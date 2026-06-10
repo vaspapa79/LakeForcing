@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+title: >-
+  LakeForcing-OpenDrift: an open pipeline for hydrodynamic and wind-wave forcing
+  of inland lakes to drive Lagrangian transport models
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Papaioannou
+    given-names: Vassilios
+    email: vaspapa@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+  - family-names: Anagnostopoulos
+    given-names: Christos
+    email: c_anagn@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+  - family-names: Moumtzidou
+    given-names: Anastasia
+    email: moumtzid@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+  - family-names: Gialampoukidis
+    given-names: Ilias
+    email: heliasgj@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+  - family-names: Vrochidis
+    given-names: Stefanos
+    email: stefanos@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+  - family-names: Kompatsiaris
+    given-names: Ioannis
+    email: ikom@iti.gr
+    affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
+license: MIT
+repository-code: "https://github.com/<user>/LakeForcing-OpenDrift"  # set on release
+keywords:
+  - inland lakes
+  - hydrodynamic modelling
+  - Delft3D
+  - OpenDrift
+  - Lagrangian transport
+  - wave forcing
+  - reproducible pipeline
+abstract: >-
+  An open Python pipeline that assembles bathymetry and meteorology from open global
+  data, automatically configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE
+  simulation for any inland lake, and exports CF-compliant NetCDF that drives the
+  OpenDrift particle tracker. The core contribution is a sigma-layer to z-level
+  coupling that makes terrain-following Delft3D output ingestible by OpenDrift.
+# version: 0.1.0        # set on release
+# doi: 10.5281/zenodo.XXXXXXX   # minted on release
