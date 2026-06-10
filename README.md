@@ -66,4 +66,4 @@ separately) + an ERA5 CDS account (`~/.cdsapirc`). OpenDrift 1.14.9.
 - **Inputs** retain their own licences/citations: HydroLAKES, GLOBathy, DAHITI, ERA5.
 
 ## Cite
-See `CITATION.cff`. Zenodo DOI minted on release.
+See `CITATION.cff`. Archived on Zenodo: [10.5281/zenodo.20627161](https://doi.org/10.5281/zenodo.20627161).

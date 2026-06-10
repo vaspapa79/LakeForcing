@@ -44,7 +44,7 @@ OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
 | | |
 |---|---|
 | Current code version | v1.0.1 |
-| Permanent link to code / repository | https://github.com/vaspapa79/LakeForcing-OpenDrift (archived on Zenodo with a citable DOI on release) |
+| Permanent link to code / repository | https://github.com/vaspapa79/LakeForcing-OpenDrift (archived on Zenodo: https://doi.org/10.5281/zenodo.20627161) |
 | Permanent link to reproducible capsule | Not applicable |
 | Legal code licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Code versioning system used | git |
@@ -828,7 +828,7 @@ steps.
 | Source-code size | approximately 0.2 MB (excluding generated data) |
 | Documentation | Repository README and the present manuscript |
 | Source repository | https://github.com/vaspapa79/LakeForcing-OpenDrift |
-| Permanent archive | Zenodo, citable DOI minted at acceptance |
+| Permanent archive | Zenodo: https://doi.org/10.5281/zenodo.20627161 |
 | Licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Availability and cost | Free and open source |
 
@@ -844,10 +844,10 @@ relationships that could have appeared to influence the work reported in this pa
 
 ## Data availability
 The source code is openly available at https://github.com/vaspapa79/LakeForcing-OpenDrift
-under the MIT licence and is archived on Zenodo with a citable DOI (DOI to be inserted at
-acceptance). The generated twelve-lake forcing dataset (CC-BY-4.0) and the full
-reproducibility data are distributed as release assets of the same repository. All input
-datasets (HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from their respective
+under the MIT licence and is archived on Zenodo at https://doi.org/10.5281/zenodo.20627161.
+The generated twelve-lake forcing dataset (CC-BY-4.0) and the full reproducibility data are
+distributed as release assets of the same repository. All input datasets (HydroLAKES,
+GLOBathy, DAHITI, ERA5) are openly available from their respective
 providers.
 
 ## Funding

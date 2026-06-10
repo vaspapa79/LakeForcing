@@ -47,4 +47,4 @@ abstract: >-
   simulation for any inland lake, and exports CF-compliant NetCDF that drives the
   OpenDrift particle tracker. The core contribution is a sigma-layer to z-level
   coupling that makes terrain-following Delft3D output ingestible by OpenDrift.
-# doi: 10.5281/zenodo.XXXXXXX   # minted on release (insert after Zenodo archives v1.0.1)
+doi: 10.5281/zenodo.20627161
