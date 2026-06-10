@@ -19,6 +19,6 @@
   "related_identifiers": [
     { "relation": "isSupplementTo", "identifier": "https://github.com/vaspapa79/LakeForcing-OpenDrift", "scheme": "url" }
   ],
-  "version": "1.0.0",
-  "notes": "Source code: https://github.com/vaspapa79/LakeForcing-OpenDrift (MIT). This Zenodo record archives the generated twelve-lake forcing dataset (CC-BY-4.0)."
+  "version": "1.0.1",
+  "notes": "This Zenodo record archives the LakeForcing-OpenDrift source code (MIT). The generated twelve-lake forcing dataset (CC-BY-4.0) and full reproducibility data are distributed as release assets at https://github.com/vaspapa79/LakeForcing-OpenDrift/releases."
 }

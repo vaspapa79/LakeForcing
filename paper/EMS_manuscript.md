@@ -43,7 +43,7 @@ OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
 
 | | |
 |---|---|
-| Current code version | v1.0.0 |
+| Current code version | v1.0.1 |
 | Permanent link to code / repository | https://github.com/vaspapa79/LakeForcing-OpenDrift (archived on Zenodo with a citable DOI on release) |
 | Permanent link to reproducible capsule | Not applicable |
 | Legal code licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
@@ -815,7 +815,7 @@ steps.
 | | |
 |---|---|
 | Software name | LakeForcing-OpenDrift |
-| Version | v1.0.0 |
+| Version | v1.0.1 |
 | Developers | V. Papaioannou, C. Anagnostopoulos, A. Moumtzidou, I. Gialampoukidis, S. Vrochidis, I. Kompatsiaris (CERTH-ITI) |
 | Contact | Vassilios Papaioannou — vaspapa@iti.gr; CERTH-ITI, 6th km Charilaou-Thermi, 57001 Thessaloniki, Greece |
 | Year first available | 2025 |
@@ -844,10 +844,11 @@ relationships that could have appeared to influence the work reported in this pa
 
 ## Data availability
 The source code is openly available at https://github.com/vaspapa79/LakeForcing-OpenDrift
-under the MIT licence. The generated twelve-lake forcing dataset is archived on Zenodo under
-CC-BY-4.0, with a citable DOI minted on release (DOI to be inserted at acceptance). All
-input datasets (HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from their
-respective providers.
+under the MIT licence and is archived on Zenodo with a citable DOI (DOI to be inserted at
+acceptance). The generated twelve-lake forcing dataset (CC-BY-4.0) and the full
+reproducibility data are distributed as release assets of the same repository. All input
+datasets (HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from their respective
+providers.
 
 ## Funding
 This research did not receive any specific grant from funding agencies in the public,
