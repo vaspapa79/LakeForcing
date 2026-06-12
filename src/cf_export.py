@@ -203,6 +203,18 @@ def regrid_h(field, lon, lat, glon, glat):
 # --------------------------------------------------------------------------- #
 #  4. waves -> Stokes drift  (surface, deep-water monochromatic estimate)
 # --------------------------------------------------------------------------- #
+def read_wnd(path):
+    """Delft3D uniform wind file: columns [time_min, speed m/s, dir deg nautical-FROM].
+    Returns (t_min, u_east, v_north) 10 m wind components (m/s)."""
+    a = np.loadtxt(path)
+    if a.ndim == 1:
+        a = a[None, :]
+    tmin, speed, dirf = a[:, 0], a[:, 1], np.deg2rad(a[:, 2])
+    u_e = -speed * np.sin(dirf)        # invert the nautical 'from' bearing
+    v_n = -speed * np.cos(dirf)        # to eastward / northward components
+    return tmin, u_e, v_n
+
+
 def stokes_surface(hs, tp, wave_to_dir_deg):
     """
     Surface Stokes drift components from Hs, Tp, propagation direction.
@@ -249,9 +261,11 @@ def write_cf(out_path, time, glon, glat, z, data2d, data3d, attrs):
         "wdir": "sea_surface_wave_to_direction",
         "ust": "sea_surface_wave_stokes_drift_x_velocity",
         "vst": "sea_surface_wave_stokes_drift_y_velocity",
+        "x_wind": "x_wind", "y_wind": "y_wind",
     }
     units = {"u": "m s-1", "v": "m s-1", "temp": "degC", "zeta": "m",
-             "Hs": "m", "Tp": "s", "wdir": "degree", "ust": "m s-1", "vst": "m s-1"}
+             "Hs": "m", "Tp": "s", "wdir": "degree", "ust": "m s-1", "vst": "m s-1",
+             "x_wind": "m s-1", "y_wind": "m s-1"}
 
     dvars = {}
     for nm, arr in data3d.items():
@@ -275,6 +289,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--flow", required=True, help="Delft3D-FLOW trim-*.nc")
     ap.add_argument("--wave", help="Delft3D-WAVE wavm-*.nc (optional)")
+    ap.add_argument("--wind", help="Delft3D uniform wind .wnd (optional; exports x_wind/y_wind)")
     ap.add_argument("--src-crs", default="EPSG:32634")
     ap.add_argument("--out", required=True)
     ap.add_argument("--lake", default="lake")
@@ -325,6 +340,20 @@ def main():
         ust, vst = stokes_surface(hs_r, tp_r, wd_r)
         data2d.update(Hs=hs_r, Tp=tp_r, wdir=wd_r, ust=ust, vst=vst)
         w.close()
+
+    # ---- 10 m wind (optional; space-uniform per lake, time-interpolated) ----
+    # ERA5 forced FLOW through the uniform .wnd file; export it so the OpenDrift
+    # demo exercises windage (current + windage + Stokes), matching the physics.
+    if args.wind:
+        tmin, u_e, v_n = read_wnd(args.wind)
+        tt = f["time"]
+        elapsed = ((tt - tt[0]) / np.timedelta64(1, "m")).astype(float)  # minutes
+        uw_t = np.interp(elapsed, tmin, u_e).astype("f4")
+        vw_t = np.interp(elapsed, tmin, v_n).astype("f4")
+        ny, nx = len(glat), len(glon)
+        data2d["x_wind"] = np.broadcast_to(uw_t[:, None, None], (len(tt), ny, nx)).copy()
+        data2d["y_wind"] = np.broadcast_to(vw_t[:, None, None], (len(tt), ny, nx)).copy()
+        print(f"wind: |U10| {np.hypot(uw_t, vw_t).min():.1f}-{np.hypot(uw_t, vw_t).max():.1f} m/s")
 
     attrs = dict(
         title=f"{args.lake}: hydrodynamic + wave forcing for OpenDrift",

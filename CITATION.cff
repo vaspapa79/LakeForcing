@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 title: >-
-  LakeForcing-OpenDrift: an open pipeline for hydrodynamic and wind-wave forcing
-  of inland lakes to drive Lagrangian transport models
+  LakeForcing-OpenDrift: an open, reproducible pipeline for generating hydrodynamic
+  and wind-wave forcing of inland lakes to drive Lagrangian transport models
 message: "If you use this software, please cite it as below."
 type: software
 authors:
@@ -10,8 +10,8 @@ authors:
     email: vaspapa@iti.gr
     affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
   - family-names: Anagnostopoulos
-    given-names: Christos
-    email: c_anagn@iti.gr
+    given-names: Christos G. E.
+    email: anagn_c@iti.gr
     affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
   - family-names: Moumtzidou
     given-names: Anastasia
@@ -30,7 +30,8 @@ authors:
     email: ikom@iti.gr
     affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
 license: MIT
-version: 1.0.1
+version: 1.1.0
+date-released: "2026-06-12"
 repository-code: "https://github.com/vaspapa79/LakeForcing-OpenDrift"
 url: "https://github.com/vaspapa79/LakeForcing-OpenDrift"
 keywords:
@@ -40,11 +41,18 @@ keywords:
   - OpenDrift
   - Lagrangian transport
   - wave forcing
+  - Stokes drift
+  - sigma-to-z coupling
+  - satellite validation
   - reproducible pipeline
 abstract: >-
   An open Python pipeline that assembles bathymetry and meteorology from open global
   data, automatically configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE
   simulation for any inland lake, and exports CF-compliant NetCDF that drives the
   OpenDrift particle tracker. The core contribution is a sigma-layer to z-level
-  coupling that makes terrain-following Delft3D output ingestible by OpenDrift.
-doi: 10.5281/zenodo.20627161
+  coupling that makes terrain-following Delft3D output ingestible by OpenDrift. It is
+  demonstrated unchanged on twelve lakes across all inhabited continents, benchmarked
+  against an expert-built reservoir model and against independent satellite lake-surface
+  temperature, and the exporter is covered by a continuous-integration test on a small
+  bundled Delft3D fixture (no Delft3D installation required).
+doi: 10.5281/zenodo.20627160

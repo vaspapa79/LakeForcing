@@ -1,0 +1,26 @@
+name: cf-export test
+
+# Runs the headline sigma-to-z exporter on a small bundled Delft3D fixture, so the
+# most reusable component of the pipeline is verified on a clean checkout WITHOUT
+# any Delft3D installation.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cf-export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install exporter dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy xarray netCDF4 pyproj pytest
+      - name: Run cf_export fixture test
+        run: pytest tests/test_cf_export.py -q

@@ -1,16 +1,17 @@
 {
-  "title": "LakeForcing-OpenDrift: an open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models",
-  "description": "Open Python pipeline that assembles bathymetry (HydroLAKES/GLOBathy/DAHITI) and ERA5 meteorology, auto-configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE simulation for any inland lake, and exports CF-compliant NetCDF that drives the OpenDrift particle tracker. Core contribution: a sigma-layer to z-level coupling. Includes generated forcing for 12 demonstration lakes on all inhabited continents.",
+  "title": "LakeForcing-OpenDrift: an open, reproducible pipeline for generating hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models",
+  "description": "Open Python pipeline that assembles bathymetry (HydroLAKES/GLOBathy/DAHITI) and ERA5 meteorology, auto-configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE simulation for any inland lake, and exports CF-compliant NetCDF that drives the OpenDrift particle tracker. Core contribution: a sigma-layer to z-level coupling (currents, temperature, water level and wave-driven Stokes drift). Demonstrated unchanged on 12 lakes on all inhabited continents (36S-60N); benchmarked against an expert-built reservoir model and against independent satellite lake-surface-temperature observations. The sigma-to-z exporter is covered by a continuous-integration test on a small bundled Delft3D fixture, so it runs with no Delft3D installation.",
   "upload_type": "software",
   "access_right": "open",
   "license": "MIT",
   "keywords": [
     "inland lakes", "Delft3D", "OpenDrift", "Lagrangian transport",
-    "wave forcing", "hydrodynamic modelling", "reproducible pipeline", "ERA5"
+    "wave forcing", "Stokes drift", "sigma-to-z coupling", "hydrodynamic modelling",
+    "reproducible pipeline", "satellite validation", "ERA5"
   ],
   "creators": [
     { "name": "Papaioannou, Vassilios", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
-    { "name": "Anagnostopoulos, Christos", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
+    { "name": "Anagnostopoulos, Christos G. E.", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
     { "name": "Moumtzidou, Anastasia", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
     { "name": "Gialampoukidis, Ilias", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
     { "name": "Vrochidis, Stefanos", "affiliation": "Information Technologies Institute, CERTH, Thessaloniki, Greece" },
@@ -19,6 +20,6 @@
   "related_identifiers": [
     { "relation": "isSupplementTo", "identifier": "https://github.com/vaspapa79/LakeForcing-OpenDrift", "scheme": "url" }
   ],
-  "version": "1.0.1",
+  "version": "1.1.0",
   "notes": "This Zenodo record archives the LakeForcing-OpenDrift source code (MIT). The generated twelve-lake forcing dataset (CC-BY-4.0) and full reproducibility data are distributed as release assets at https://github.com/vaspapa79/LakeForcing-OpenDrift/releases."
 }

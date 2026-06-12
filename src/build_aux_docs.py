@@ -18,7 +18,7 @@ TITLE = ("LakeForcing-OpenDrift: an open, reproducible pipeline for generating "
          "transport models")
 
 HIGHLIGHTS = [
-    "Open pipeline turns global open data into wave forcing for any inland lake",
+    "Open pipeline turns global open data into transport forcing for any inland lake",
     "Reusable sigma-layer to z-level coupling links Delft3D-FLOW/WAVE to OpenDrift",
     "Closed-lake Delft3D setup auto-built from HydroLAKES/GLOBathy/DAHITI and ERA5",
     "Exports CF NetCDF with 3-D currents, waves and surface Stokes drift",
@@ -55,7 +55,7 @@ def build_cover_letter():
         r = p.add_run(text); r.bold = bold; r.italic = italic
         return p
 
-    para("10 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
+    para("12 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
     para("To the Editors-in-Chief,\nEnvironmental Modelling & Software",
          align=WD_ALIGN_PARAGRAPH.LEFT, after=12)
 
@@ -90,7 +90,13 @@ def build_cover_letter():
          "it is a reusable, openly released modelling tool with a clearly described "
          "method, demonstrated generality, and full software and data availability. "
          "It addresses a concrete and timely barrier to environmental transport "
-         "modelling in freshwater systems.")
+         "modelling in freshwater systems. The generality is supported by a model-to-model "
+         "benchmark against an expert-built reservoir model and by an independent comparison "
+         "of the exported surface temperature against satellite observations for four further "
+         "lakes. We note that the openly released twelve-lake forcing dataset could form the "
+         "basis of a companion data descriptor (e.g. in Data in Brief), which we would be "
+         "glad to prepare as a linked co-submission should the editors consider it "
+         "appropriate.")
 
     para("This manuscript is original, has not been published previously, and is "
          "not under consideration for publication elsewhere. All authors have "

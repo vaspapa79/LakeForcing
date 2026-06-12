@@ -13,6 +13,8 @@ output/*
 
 # Local working / private files
 Authors.docx
+# Internal review copies (not for the public repo)
+paper/*_ca_review*.docx
 *.cdsapirc
 *credentials*.json
 .env

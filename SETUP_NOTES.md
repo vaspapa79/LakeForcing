@@ -1,70 +1,71 @@
-# Setup & run notes (Polyfytos prototype)
+# Applying the σ-to-z exporter to an existing Delft3D model
 
-You run Delft3D yourself — these are the inputs/sequence so the outputs slot
-straight into the export. **Nothing here runs automatically.**
+The σ-to-z exporter (`cf_export.py`) is independent of how a Delft3D model was built, so it
+can be pointed at the output of any existing Delft3D-FLOW/WAVE lake model to produce
+OpenDrift-ready CF-NetCDF. This note documents the inputs and the sequence; the heavyweight
+Delft3D-FLOW/WAVE runs are performed by the user with their own engine installation.
 
-## 0. One change needed for FLOW output to be readable
+## 1. Make the FLOW output NetCDF-readable
 
-`cf_export.py` reads a **NetCDF** map file (`trim-*.nc`). By default Delft3D-FLOW
-writes NEFIS (`trim-*.dat/.def`). Two options:
+`cf_export.py` reads a **NetCDF** map file (`trim-*.nc`). By default Delft3D-FLOW writes
+NEFIS (`trim-*.dat` / `.def`). Either:
 
-- **Preferred** — add this line to `polifitos.mdf` and run FLOW once more:
+- **Preferred** — add the following line to the model's `.mdf` and run FLOW once more, so
+  FLOW writes `trim-<name>.nc` directly:
   ```
   FlNcdf = #map his#
   ```
-  This makes FLOW write `trim-polifitos.nc` directly.
-- **Or** keep your current NEFIS output and convert afterwards (NEFIS→NetCDF via
-  the Delft3D MATLAB toolbox `vs_*` / `qpread`, or `nefis2nc`). Tell me and I'll
-  wire the conversion into step 6 instead.
+- **Or** keep NEFIS output and convert afterwards (NEFIS→NetCDF via the Delft3D MATLAB
+  toolbox `vs_*` / `qpread`, or `nefis2nc`).
 
-The σ→z transform in `cf_export.py` needs the sigma layer-centre coordinates
-(`SIG_LYR`), water level (`S1`), bed depth (`DPS`) and the grid angle (`ALFAS`) —
-all present in the standard trim output.
+The σ-to-z transform needs the σ layer-centre coordinates (`SIG_LYR`), the water level
+(`S1`), the bed depth (`DPS`) and the grid angle (`ALFAS`) — all present in the standard
+trim output.
 
-## 1. Currents / temperature / level  (FLOW — already yours)
+## 2. Currents, temperature and water level (FLOW)
 
-Your existing `polifitos.mdf` run already produces these. Just ensure NetCDF
-output per step 0. No other change.
+An existing `.mdf` run already produces these; only the NetCDF output of step 1 is required.
 
-## 2. Waves  (WAVE/SWAN — new, when you're ready)
+## 3. Waves (WAVE / SWAN)
 
 Generate the `.mdw` (writes input only):
 ```
-conda run -n plastic python src/make_wave_mdw.py ^
-  --grid "C:/Users/vaspapa/Desktop/Greek_lakes/Lake Polyfytos/polifitos.grd" ^
-  --out  "C:/Users/vaspapa/Desktop/Greek_lakes/Lake Polyfytos/polifitos.mdw" ^
-  --name polyfytos --refdate 2022-07-01 --wind-speed 7 --wind-dir 320
+python src/make_wave_mdw.py \
+  --grid  path/to/<name>.grd \
+  --out   path/to/<name>.mdw \
+  --name  <name> --refdate 2022-07-01 --wind-speed 7 --wind-dir 320
 ```
-Then **you** launch it (I will not):
+then launch the WAVE run with the Delft3D engine:
 ```
-"C:/Program Files/Deltares/Delft3D 4.07.01/kernels/x64/bin/run_dwaves.bat" polifitos.mdw
+run_dwaves.bat <name>.mdw
 ```
-→ produces `wavm-polifitos.nc` (Hs, Tp, direction) on the same grid.
+which produces `wavm-<name>.nc` (significant wave height, peak period, mean direction) on
+the same grid.
 
-> The `--wind-speed/--wind-dir` here are a single uniform state for a first
-> stationary test. For the published dataset we'll drive SWAN with the ERA5 wind
-> time series (multiple `[TimePoint]` blocks) so waves co-vary with the currents.
+> `--wind-speed` / `--wind-dir` specify a single stationary wind state. For a
+> time-varying wave field, the generator also accepts multiple `[TimePoint]` blocks driven
+> by the ERA5 wind time series, so that waves co-vary with the currents (Section 6 of the
+> manuscript).
 
-## 3. Export → CF-NetCDF  (σ→z fix; no Delft3D needed)
-
+## 4. Export to CF-NetCDF (σ-to-z; no Delft3D required)
 ```
-conda run -n plastic python src/cf_export.py ^
-  --flow "C:/Users/vaspapa/Desktop/Greek_lakes/Lake Polyfytos/trim-polifitos.nc" ^
-  --wave "C:/Users/vaspapa/Desktop/Greek_lakes/Lake Polyfytos/wavm-polifitos.nc" ^
-  --src-crs EPSG:32634 --lake polyfytos ^
-  --out output/polyfytos_forcing.nc
+python src/cf_export.py \
+  --flow path/to/trim-<name>.nc \
+  --wave path/to/wavm-<name>.nc \
+  --src-crs EPSG:<utm-zone> --lake <name> \
+  --out output/<name>_forcing.nc
 ```
 
-## 4. Validate with OpenDrift  (no Delft3D needed)
-
+## 5. Drive OpenDrift (no Delft3D required)
 ```
-conda run --no-capture-output -n plastic python src/run_opendrift_demo.py ^
-  --forcing output/polyfytos_forcing.nc --lon 21.95 --lat 40.20
+python src/run_opendrift_demo.py \
+  --forcing output/<name>_forcing.nc --lon <lon> --lat <lat>
 ```
-Check the reader printout lists `depth` in metres (0…−50) and that particles move.
+Confirm the reader printout lists `depth` in metres (0…−50 m) and that particles advect.
 
-## Verify-once items (against the first real trim-*.nc)
-- `SIG_LYR` sign (0→−1 vs 0→1) — auto-handled but confirm.
-- `U1`/`V1` staggering direction (which axis is M/xi).
-- WAVE var names `HSIGN`/`RTP`/`DIR`.
-These are the only model-build-specific bits; everything else is generic.
+## Model-build-specific checks (verify once against the first real trim-*.nc)
+- `SIG_LYR` sign convention (0→−1 vs 0→1) — auto-detected; confirm.
+- `U1` / `V1` staggering direction (which axis is the M/ξ axis).
+- WAVE variable names (`HSIGN` / `RTP` / `DIR`).
+
+Everything else in the exporter is generic and model-independent.

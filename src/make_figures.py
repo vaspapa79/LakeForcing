@@ -26,9 +26,9 @@ DOCS.mkdir(exist_ok=True)
 
 # lake metadata (lon, lat, type, max depth m, mean depth m approx, drift m)
 LAKES = {
-    "lagdo":     dict(lon=13.92, lat=8.79,  type="reservoir", dmax=9,  dmean=4.5, drift=364,  name="Lagdo"),
-    "bornos":    dict(lon=-5.70, lat=36.81, type="reservoir", dmax=20, dmean=8,   drift=832,  name="Bornos"),
-    "mead":      dict(lon=-114.37,lat=36.23,type="reservoir", dmax=40, dmean=20,  drift=769,  name="Mead"),
+    "lagdo":     dict(lon=13.92, lat=8.79,  type="reservoir", dmax=9,  dmean=4.5, drift=2439, name="Lagdo"),
+    "bornos":    dict(lon=-5.70, lat=36.81, type="reservoir", dmax=20, dmean=8,   drift=1337, name="Bornos"),
+    "mead":      dict(lon=-114.37,lat=36.23,type="reservoir", dmax=40, dmean=20,  drift=2933, name="Mead"),
     "polyfytos": dict(lon=21.94, lat=40.21, type="reservoir", dmax=80, dmean=30,  drift=1743, name="Polyfytos"),
     "trasimeno": dict(lon=12.12, lat=43.13, type="natural",   dmax=7,  dmean=4.7, drift=3419, name="Trasimeno"),
     "balaton":   dict(lon=17.73, lat=46.83, type="natural",   dmax=9,  dmean=3.2, drift=3250, name="Balaton"),
@@ -79,14 +79,14 @@ def fig_architecture():
         return p
 
     def caption(cx, y, title, sub=None, color="#222"):
-        ax.text(cx, y, title, ha="center", va="top", fontsize=12.5,
+        ax.text(cx, y, title, ha="center", va="top", fontsize=13.5,
                 fontweight="bold", color=color, zorder=6)
         if sub:
-            ax.text(cx, y - 3.1, sub, ha="center", va="top", fontsize=9.5,
+            ax.text(cx, y - 3.1, sub, ha="center", va="top", fontsize=10,
                     style="italic", color="#555", zorder=6)
 
     ax.text(66, 56.5, "The LakeForcing-OpenDrift pipeline", ha="center",
-            fontsize=18, fontweight="bold", zorder=6)
+            fontsize=21, fontweight="bold", zorder=6)
 
     # ----- panels (tight gaps) -----
     P1 = panel(2, 12, 31, 40)
@@ -171,7 +171,7 @@ def fig_architecture():
         ax.add_patch(FancyArrowPatch((55, wy), (71, wy+0.5), arrowstyle="-|>",
                      mutation_scale=11, lw=1.6, color="#3f7fb0",
                      connectionstyle="arc3,rad=0.2", zorder=3))
-    ax.text(55.5, 51.2, "wind · heat · waves", ha="center", fontsize=9.5,
+    ax.text(55.5, 51.2, "wind · heat · waves", ha="center", fontsize=10,
             style="italic", color="#33576e", zorder=4)
     caption(55.5, 10.5, "Coupled Delft3D-FLOW + WAVE",
             "automated closed-lake setup · σ-layers")
@@ -185,7 +185,7 @@ def fig_architecture():
         ax.plot(xs, ss - s*(ss-bs), color="#1d4e74", lw=0.8, zorder=2)
     ax.plot(xs, ss, color="#0d3b5c", lw=1.3, zorder=2)
     ax.plot(xs, bs, color=SANDD, lw=1.3, zorder=2)
-    ax.text(85, 41.0, "σ-layers", ha="center", fontsize=8.5, color="#1d4e74", zorder=3)
+    ax.text(85, 41.0, "σ-layers", ha="center", fontsize=12.8, color="#1d4e74", zorder=3)
     # transform arrow
     ax.add_patch(FancyArrowPatch((88.6, 31), (91.2, 31), arrowstyle="-|>",
                  mutation_scale=14, lw=2.2, color=CORE, zorder=4))
@@ -201,9 +201,9 @@ def fig_architecture():
         ax.add_patch(Polygon([(cx0, yt), (cx0+w, yt), (cx0+w, yt-th),
                      (cx0, yt-th)], closed=True, fc=col, ec="#33424d", lw=0.5,
                      alpha=0.78, zorder=3+i*0.01))
-    ax.text(cx0+w+sk+1.2, cyt+d, "z = 0", fontsize=8.5, va="center", zorder=4)
-    ax.text(cx0+w+sk+1.2, cyt-5*gap, "−50 m", fontsize=8.5, va="center", zorder=4)
-    caption(90, 10.5, "σ → z coupling", "cf_export.py · the core", color=CORE)
+    ax.text(cx0+w+sk+1.2, cyt+d, "z = 0", fontsize=12.8, va="center", zorder=4)
+    ax.text(cx0+w+sk+1.2, cyt-5*gap, "−50 m", fontsize=12.8, va="center", zorder=4)
+    caption(90, 10.5, "σ-to-z coupling", "cf_export.py · the core", color=CORE)
 
     # ============ Scene 4: OpenDrift transport ============
     cxL, cyL = 116.5, 34
@@ -223,7 +223,7 @@ def fig_architecture():
         ax.add_patch(Circle((px, py), 0.5, fc=c, ec="white", lw=0.4, zorder=3))
     ax.plot(rx, ry, "*", color="#ffd21e", ms=15, mec="black", mew=0.8, zorder=4)
     ax.text(116.5, 22.5, "plastics · oil · HAB · larvae", ha="center",
-            fontsize=9.0, style="italic", color="#444", zorder=4)
+            fontsize=13.5, style="italic", color="#444", zorder=4)
     caption(116.5, 10.5, "OpenDrift transport", "CF-NetCDF read unchanged")
 
     # ----- flowing connectors between scenes -----
@@ -236,7 +236,7 @@ def fig_architecture():
                             zorder=8, capstyle="round")
         a.set_path_effects([pe.withStroke(linewidth=5.6, foreground="white")])
         ax.add_patch(a)
-        t = ax.text((x0+x1)/2, y+2.7, lab, ha="center", fontsize=9.0,
+        t = ax.text((x0+x1)/2, y+2.7, lab, ha="center", fontsize=13.5,
                     style="italic", color=ARR, zorder=8)
         t.set_path_effects([pe.withStroke(linewidth=2.4, foreground="white")])
     flow(33, 35.5, 32, "force")
@@ -244,7 +244,7 @@ def fig_architecture():
     flow(99, 101.5, 32, "export")
 
     ax.set_ylim(8.5, 59)                      # crop empty top/bottom margins
-    fig.savefig(DOCS / "figure_architecture.png", dpi=185, bbox_inches="tight",
+    fig.savefig(DOCS / "figure_architecture.png", dpi=300, bbox_inches="tight",
                 pad_inches=0.04, facecolor="white")
     plt.close(fig)
     print("wrote figure_architecture.png")
@@ -268,11 +268,11 @@ def fig_sigma_schematic():
         ax.plot(x, z, color=BLUE, lw=1.2)
     ax.plot(x, surf, color="navy", lw=2)
     ax.plot(x, bed, color="#5b4a2f", lw=2)
-    ax.text(5, 0.9, "water surface  ζ", ha="center", color="navy", fontsize=9)
-    ax.text(5, bed.min() - 0.7, "lake bed  d", ha="center", color="#5b4a2f", fontsize=9)
-    ax.text(0.3, -3.2, "σ-layers follow\nthe terrain", color=BLUE, fontsize=9.5,
+    ax.text(5, 0.9, "water surface  ζ", ha="center", color="navy", fontsize=13.5)
+    ax.text(5, bed.min() - 0.7, "lake bed  d", ha="center", color="#5b4a2f", fontsize=13.5)
+    ax.text(0.3, -3.2, "σ-layers follow\nthe terrain", color=BLUE, fontsize=10,
             fontweight="bold")
-    ax.set_title("(a) Delft3D-FLOW: terrain-following σ-layers", fontsize=10)
+    ax.set_title("(a) Delft3D-FLOW: terrain-following σ-layers", fontsize=15)
     ax.set_ylim(-8, 2); ax.set_xlim(0, 10); ax.axis("off")
 
     # ---- right: fixed z-levels ----
@@ -296,16 +296,16 @@ def fig_sigma_schematic():
             ax.add_patch(FancyArrowPatch((xc - 0.0, z), (xc, z), arrowstyle="-|>",
                          mutation_scale=8, color=ORANGE))
             ax.plot(xc, z, "o", color=ORANGE, ms=4)
-    ax.text(0.3, -3.2, "fixed z-levels\n(metres)", color=GREEN, fontsize=9.5,
+    ax.text(0.3, -3.2, "fixed z-levels\n(metres)", color=GREEN, fontsize=10,
             fontweight="bold")
-    ax.text(6.2, -6.7, "below bed →\nmasked", color="grey", fontsize=8.5)
-    ax.text(5.1, 0.7, "surface clamp\nat z = 0", color=ORANGE, fontsize=8.5)
-    ax.set_title("(b) OpenDrift target: fixed z-levels", fontsize=10)
+    ax.text(6.2, -6.7, "below bed:\nmasked", color="grey", fontsize=12.8)
+    ax.text(5.1, 0.7, "surface clamp\nat z = 0", color=ORANGE, fontsize=12.8)
+    ax.set_title("(b) OpenDrift target: fixed z-levels", fontsize=15)
     ax.set_ylim(-8, 2); ax.set_xlim(0, 10); ax.axis("off")
 
     fig.suptitle(r"$z_k=\zeta+\sigma_k\,(\zeta+d)$  : reconstruct each σ-centre depth, "
-                 "then interpolate to fixed z-levels", fontsize=11)
-    fig.savefig(DOCS / "figure_sigma_schematic.png", dpi=170, bbox_inches="tight",
+                 "then interpolate to fixed z-levels", fontsize=16.5)
+    fig.savefig(DOCS / "figure_sigma_schematic.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
     print("wrote figure_sigma_schematic.png")
@@ -346,7 +346,7 @@ def fig_lake_map():
                    lw=0.8, zorder=5, **kw)
         dx, dy = off[k]
         ax.annotate(d["name"], xy=(d["lon"], d["lat"]),
-                    xytext=(d["lon"] + dx, d["lat"] + dy), fontsize=8.5,
+                    xytext=(d["lon"] + dx, d["lat"] + dy), fontsize=12.8,
                     fontweight="bold", zorder=6,
                     arrowprops=dict(arrowstyle="-", lw=0.5, color="#555"),
                     **(dict(transform=tf) if tf else {}))
@@ -354,11 +354,11 @@ def fig_lake_map():
                   markeredgecolor="k", markersize=10, label="natural lake"),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=ORANGE,
                   markeredgecolor="k", markersize=10, label="reservoir")]
-    ax.legend(handles=leg, loc="lower left", fontsize=9, frameon=True)
+    ax.legend(handles=leg, loc="lower left", fontsize=13.5, frameon=True)
     ax.set_title("Geographic distribution of the twelve demonstration lakes\n"
                  "(marker size ∝ 36 h mean drift; 36°S to 60°N, all inhabited continents)",
-                 fontsize=11)
-    fig.savefig(DOCS / "figure_lake_map.png", dpi=170, bbox_inches="tight",
+                 fontsize=16.5)
+    fig.savefig(DOCS / "figure_lake_map.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
     print("wrote figure_lake_map.png")
@@ -376,14 +376,14 @@ def fig_drift_scatter():
     ax.scatter(dmean, drift, c=cols, s=110, edgecolor="black", lw=0.8, zorder=3)
     for k in names:
         ax.annotate(LAKES[k]["name"], (LAKES[k]["dmean"], LAKES[k]["drift"]),
-                    textcoords="offset points", xytext=(6, 4), fontsize=8)
+                    textcoords="offset points", xytext=(6, 4), fontsize=12)
     ax.set_xlabel("approx. mean depth (m)")
     ax.set_ylabel("36 h mean drift (m)")
-    ax.set_title("(a) Transport vs. depth", fontsize=10)
+    ax.set_title("(a) Transport vs. depth", fontsize=15)
     ax.grid(alpha=0.3)
 
     # (b) drift vs |U|max (uses table values)
-    umax = {"lagdo":0.015,"bornos":0.038,"mead":0.019,"polyfytos":1.18,
+    umax = {"lagdo":0.030,"bornos":0.028,"mead":0.049,"polyfytos":1.18,
             "trasimeno":0.012,"balaton":0.005,"rotsee":0.018,"erken":0.010,
             "poyang":0.020,"sea_of_galilee":0.032,"eucumbene":0.052,
             "nova_ponte":0.030}
@@ -392,22 +392,22 @@ def fig_drift_scatter():
     ax.scatter(uu, drift, c=cols, s=110, edgecolor="black", lw=0.8, zorder=3)
     for k in names:
         ax.annotate(LAKES[k]["name"], (umax[k], LAKES[k]["drift"]),
-                    textcoords="offset points", xytext=(6, 4), fontsize=8)
+                    textcoords="offset points", xytext=(6, 4), fontsize=12)
     ax.set_xscale("log")
     ax.set_xlabel("max surface current |U|$_{max}$ (m s$^{-1}$)")
     ax.set_ylabel("36 h mean drift (m)")
-    ax.set_title("(b) Transport vs. current strength", fontsize=10)
+    ax.set_title("(b) Transport vs. current strength", fontsize=15)
     ax.grid(alpha=0.3, which="both")
     leg = [Line2D([0],[0],marker="o",color="w",markerfacecolor=GREEN,
                   markeredgecolor="k",markersize=10,label="natural"),
            Line2D([0],[0],marker="o",color="w",markerfacecolor=ORANGE,
                   markeredgecolor="k",markersize=10,label="reservoir")]
-    ax.legend(handles=leg, fontsize=9, loc="lower right")
+    ax.legend(handles=leg, fontsize=13.5, loc="lower right")
     fig.suptitle("Transport across the twelve lakes; drift reflects basin size, "
                  "depth, fetch and wind exposure — not peak current alone "
                  "(cf. Polyfytos: strong localised river jet, moderate drift)",
-                 fontsize=10.5)
-    fig.savefig(DOCS / "figure_drift_scatter.png", dpi=170, bbox_inches="tight",
+                 fontsize=15.8)
+    fig.savefig(DOCS / "figure_drift_scatter.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
     print("wrote figure_drift_scatter.png")
@@ -447,7 +447,7 @@ def fig_vertical_sigma_z(prefix="erken"):
     pm = axs[0].pcolormesh(hours, zk, np.ma.masked_invalid(T),
                            cmap="inferno", shading="auto")
     fig.colorbar(pm, ax=axs[0], fraction=0.046, pad=0.02, label="temperature (°C)")
-    axs[0].set_title("(a) temperature on z-levels", fontsize=11)
+    axs[0].set_title("(a) temperature on z-levels", fontsize=16.5)
     # (b) current speed on a logarithmic colour scale; clip zeros/tiny values
     # up to the floor so they fill with the lowest colour instead of white
     spos = S[np.isfinite(S) & (S > 0)]
@@ -457,13 +457,13 @@ def fig_vertical_sigma_z(prefix="erken"):
                            norm=LogNorm(vmin=vmin, vmax=np.nanmax(S)))
     fig.colorbar(pm, ax=axs[1], fraction=0.046, pad=0.02,
                  label="current speed (m s$^{-1}$, log scale)")
-    axs[1].set_title("(b) current speed on z-levels (log scale)", fontsize=11)
+    axs[1].set_title("(b) current speed on z-levels (log scale)", fontsize=16.5)
     for a in axs:
         a.set_xlabel("hours"); a.set_ylim(ylo, yhi)
     axs[0].set_ylabel("depth (m)")
-    fig.suptitle(f"{LAKES[prefix]['name']}: depth-resolved forcing from the σ→z "
-                 "coupling (deepest column, 2-day run)", fontsize=12)
-    fig.savefig(OUT / "figure_vertical_sigma_z.png", dpi=170, bbox_inches="tight",
+    fig.suptitle(f"{LAKES[prefix]['name']}: depth-resolved forcing from the σ-to-z "
+                 "coupling (deepest column, 2-day run)", fontsize=18)
+    fig.savefig(OUT / "figure_vertical_sigma_z.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
     print("wrote figure_vertical_sigma_z.png")
@@ -489,8 +489,8 @@ def fig_forcing_example(prefix="polyfytos"):
     def cbar_under(pm, a, label, nbins=6):
         cb = fig.colorbar(pm, ax=a, orientation="horizontal",
                           fraction=0.058, pad=0.04, aspect=32)
-        cb.set_label(label, fontsize=11)
-        cb.ax.tick_params(labelsize=9)
+        cb.set_label(label, fontsize=16.5)
+        cb.ax.tick_params(labelsize=13.5)
         cb.locator = MaxNLocator(nbins=nbins); cb.update_ticks()
 
     # (a) currents: speed + quiver
@@ -500,28 +500,28 @@ def fig_forcing_example(prefix="polyfytos"):
     axs[0].quiver(LON[::st, ::st], LAT[::st, ::st], u[::st, ::st], v[::st, ::st],
                   scale=8, width=0.004, color="black", alpha=0.6)
     cbar_under(pm, axs[0], "|U| (m s$^{-1}$)")
-    axs[0].set_title("(a) Mean surface current", fontsize=12)
+    axs[0].set_title("(a) Mean surface current", fontsize=18)
 
     # (b) temperature
     pm = axs[1].pcolormesh(ds.lon, ds.lat, np.ma.masked_invalid(temp),
                            cmap="RdYlBu_r", shading="auto")
     cbar_under(pm, axs[1], "T (°C)", nbins=4)
-    axs[1].set_title("(b) Surface temperature", fontsize=12)
+    axs[1].set_title("(b) Surface temperature", fontsize=18)
 
     # (c) significant wave height
     if hs is not None:
         pm = axs[2].pcolormesh(ds.lon, ds.lat, np.ma.masked_invalid(hs),
                                cmap="viridis", shading="auto")
         cbar_under(pm, axs[2], "H$_s$ (m)")
-        axs[2].set_title("(c) Significant wave height", fontsize=12)
+        axs[2].set_title("(c) Significant wave height", fontsize=18)
     else:
         axs[2].axis("off")
 
     fig.suptitle(f"Exported surface forcing fields for "
                  f"{LAKES.get(prefix,{}).get('name',prefix)} "
                  "— a single coupled FLOW+WAVE run, OpenDrift-ready",
-                 fontsize=13, y=0.95)
-    fig.savefig(DOCS / "figure_forcing_example.png", dpi=170, bbox_inches="tight",
+                 fontsize=19.5, y=0.95)
+    fig.savefig(DOCS / "figure_forcing_example.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
     print("wrote figure_forcing_example.png")

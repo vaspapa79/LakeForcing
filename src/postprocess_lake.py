@@ -32,6 +32,7 @@ def main():
     d = ROOT / "models" / p
     epsg = json.loads((d / f"{p}_grid.json").read_text())["epsg"]
     trim, wavm = d / f"trim-{p}.nc", d / f"wavm-{p}.nc"
+    wnd = d / f"{p}.wnd"
     if not trim.exists():
         raise SystemExit(f"{p}: no trim (FLOW not done)")
     forcing = ROOT / "output" / f"{p}_forcing.nc"
@@ -41,6 +42,8 @@ def main():
             "--lake", p, "--out", forcing]
     if wavm.exists():
         args += ["--wave", wavm]
+    if wnd.exists():
+        args += ["--wind", wnd]
     run(*args)
 
     # verified-wet seed (finite surface current)

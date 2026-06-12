@@ -31,9 +31,10 @@ FIGS = {
     "architecture": (ROOT / "docs/figure_architecture.png", 1,
         "Architecture of the LakeForcing-OpenDrift pipeline: single-purpose, "
         "file-coupled modules transform open global data into OpenDrift-ready "
-        "CF-NetCDF; the σ→z coupling (cf_export.py) is the methodological core."),
+        "CF-NetCDF; the σ-to-z coupling (cf_export.py) is the engine-to-tracker "
+        "bridge."),
     "sigma_schematic": (ROOT / "docs/figure_sigma_schematic.png", 2,
-        "The σ-layer → z-level coupling. (a) Delft3D-FLOW stores fields on "
+        "The σ-layer to z-level coupling. (a) Delft3D-FLOW stores fields on "
         "terrain-following σ-layers whose depths vary with water level and "
         "bathymetry; (b) each σ-centre depth is reconstructed and the field "
         "interpolated to fixed metric z-levels, clamped at the surface (z = 0) "
@@ -56,9 +57,29 @@ FIGS = {
         "release point (star) and endpoints (dots); land is grey."),
     "scatter": (ROOT / "docs/figure_drift_scatter.png", 7,
         "Physical consistency of the demonstration: 36 h mean drift versus "
-        "(a) approximate mean depth and (b) maximum surface current. Transport "
-        "is governed by depth, fetch and wind exposure rather than peak current "
-        "alone."),
+        "(a) approximate mean depth and (b) maximum surface current. With only "
+        "twelve lakes these are rank tendencies, not fits: the drift correlates "
+        "negatively with depth (Spearman ρ = −0.53, p ≈ 0.08) and weakly positively "
+        "with area and fetch, none significant at n = 12, so transport is governed "
+        "by fetch and wind exposure rather than peak current alone."),
+    "validation": (ROOT / "docs/figure_validation.png", 8,
+        "Benchmark of the auto-generated closed-lake configuration against the "
+        "peer-reviewed, expert-built Polyfytos model on the shared grid (48 h mean "
+        "surface fields): (a, b) surface-current speed and (c) its scatter; "
+        "(d, e) surface temperature and (f) its scatter. The automated forcing "
+        "reproduces the thermal field (RMSE 0.85 °C) and current magnitude "
+        "(RMSE 1.5 cm/s, r = 0.80); the weaker auto currents reflect the absence "
+        "of the river discharge that the hand-built model includes."),
+    "satellite": (ROOT / "docs/figure_satellite.png", 9,
+        "Independent validation against satellite lake surface water temperature "
+        "(Landsat-8/9 Collection-2 Level-2 thermal band, near-cloudless overpasses "
+        "around 1-3 July 2022): for each lake, the satellite skin temperature, the "
+        "exported model surface temperature at the diurnal peak, and their scatter. "
+        "The three Northern-Hemisphere summer lakes run several °C cold of the 2022 "
+        "heatwave skin temperature — a climatological-initialisation effect — while "
+        "the Southern-Hemisphere winter control (Nova Ponte) matches to below 1 °C, "
+        "indicating the heat-flux forcing is sound and the bias is in the "
+        "initialisation."),
 }
 
 
@@ -107,7 +128,7 @@ def front_matter(doc):
                   "to drive Lagrangian transport models")
     r.bold = True; r.font.size = Pt(16)
 
-    authors = [("Vassilios Papaioannou", "1,*"), ("Christos Anagnostopoulos", "1"),
+    authors = [("Vassilios Papaioannou", "1,*"), ("Christos G. E. Anagnostopoulos", "1"),
                ("Anastasia Moumtzidou", "1"), ("Ilias Gialampoukidis", "1"),
                ("Stefanos Vrochidis", "1"), ("Ioannis Kompatsiaris", "1")]
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -125,7 +146,7 @@ def front_matter(doc):
     ar.italic = True; ar.font.size = Pt(10.5)
 
     emails = [("Vassilios Papaioannou", "vaspapa@iti.gr"),
-              ("Christos Anagnostopoulos", "c_anagn@iti.gr"),
+              ("Christos G. E. Anagnostopoulos", "anagn_c@iti.gr"),
               ("Anastasia Moumtzidou", "moumtzid@iti.gr"),
               ("Ilias Gialampoukidis", "heliasgj@iti.gr"),
               ("Stefanos Vrochidis", "stefanos@iti.gr"),
@@ -175,6 +196,15 @@ def emit_figure(doc, name):
     cap.paragraph_format.space_after = Pt(2); cap.paragraph_format.space_before = Pt(2)
     b = cap.add_run(f"Figure {num}. "); b.bold = True; b.font.size = Pt(10.5)
     cr = cap.add_run(caption); cr.font.size = Pt(10.5)
+    spacer(doc)
+
+
+def emit_graphical_abstract(doc):
+    """Insert the plate-assembled graphical abstract, full width, unnumbered."""
+    path = ROOT / "docs/graphical_abstract.png"
+    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_after = Pt(2)
+    p.add_run().add_picture(str(path), width=Inches(img_width_in(path, 6.9)))
     spacer(doc)
 
 
@@ -321,6 +351,8 @@ def main():
         m = re.match(r"\[\[FIG:([a-z_]+)\]\]", s)
         if m:
             emit_figure(doc, m.group(1)); i += 1; continue
+        if s == "[[GRAPHICAL_ABSTRACT]]":
+            emit_graphical_abstract(doc); i += 1; continue
         if s.startswith("|") and i + 1 < len(body) and set(body[i + 1].strip()) <= set("|-: "):
             rows = []
             while i < len(body) and body[i].strip().startswith("|"):

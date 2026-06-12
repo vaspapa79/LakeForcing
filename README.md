@@ -8,10 +8,11 @@ Built with **Delft3D-FLOW + Delft3D-WAVE** and exported as **CF-compliant NetCDF
 The methodological core is the **σ-layer → z-level coupling** that makes
 terrain-following Delft3D output readable by OpenDrift's fixed-depth reader.
 
-> Companion code for the manuscript *"An open pipeline for generating hydrodynamic and
-> wind-wave forcing of inland lakes to drive Lagrangian transport models"*
-> (target: **Environmental Modelling & Software**; dataset descriptor backup: *Data in
-> Brief*). Draft: `paper/EMS_manuscript.md`.
+> Companion code for the manuscript *"LakeForcing-OpenDrift: an open, reproducible pipeline
+> for generating hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian
+> transport models"* (target: **Environmental Modelling & Software**, Original Software
+> Publication; a companion dataset descriptor for *Data in Brief* is planned). Draft:
+> `paper/EMS_manuscript.md`.
 
 ## Why
 Global ocean reanalyses (CMEMS) stop at the coast, so lake-scale transport modelling
@@ -51,10 +52,12 @@ python src/postprocess_lake.py --prefix erken
 ```
 
 ## Demonstration
-Validated on **12 lakes** on all inhabited continents (36°S → 60°N; shallow ↔ deep;
-natural ↔ reservoir; two bathymetry sources), all through the same unmodified pipeline.
-See `output/figure_demonstration.png`, `paper/EMS_manuscript.md` Table 3, and
-`docs/figure_architecture.png`.
+**Demonstrated** on **12 lakes** on all inhabited continents (36°S → 60°N; shallow ↔ deep;
+natural ↔ reservoir; two bathymetry sources), all through the same unmodified pipeline. The
+results establish physical plausibility and internal consistency (plus a model-to-model
+benchmark and an independent satellite surface-temperature check), not per-lake validation
+against in-situ observations. See `output/figure_demonstration.png`,
+`paper/EMS_manuscript.md` Table 3, and `docs/figure_architecture.png`.
 
 ## Requirements
 Python 3.11 (`requirements.txt`) + **Delft3D 4.07.01** (FLOW + WAVE/SWAN, installed
@@ -66,4 +69,4 @@ separately) + an ERA5 CDS account (`~/.cdsapirc`). OpenDrift 1.14.9.
 - **Inputs** retain their own licences/citations: HydroLAKES, GLOBathy, DAHITI, ERA5.
 
 ## Cite
-See `CITATION.cff`. Archived on Zenodo: [10.5281/zenodo.20627161](https://doi.org/10.5281/zenodo.20627161).
+See `CITATION.cff`. Archived on Zenodo: [10.5281/zenodo.20627160](https://doi.org/10.5281/zenodo.20627160).
