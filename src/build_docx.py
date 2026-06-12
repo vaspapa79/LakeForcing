@@ -98,6 +98,25 @@ def spacer(doc, pt=3):
     return p
 
 
+URL_RE = re.compile(r"(https?://[^\s)]+)")
+
+
+def _emit_plain(par, s):
+    """Add plain text, turning any URL into a live (blue, underlined) hyperlink."""
+    for k, part in enumerate(URL_RE.split(s)):
+        if not part:
+            continue
+        if k % 2 == 1:                       # captured URL
+            trail = ""
+            while part and part[-1] in ".,;:":
+                trail = part[-1] + trail; part = part[:-1]
+            add_hyperlink(par, part, part)
+            if trail:
+                par.add_run(trail)
+        else:
+            par.add_run(part)
+
+
 def add_runs(par, text):
     par.paragraph_format.space_after = Pt(3)
 
@@ -107,18 +126,17 @@ def add_runs(par, text):
     for tok in re.split(r"(\*\*.+?\*\*|`[^`]+?`|_\{[^}]*\}|\*[^*]+?\*)", text):
         if not tok:
             continue
-        r = par.add_run()
         if tok.startswith("**") and tok.endswith("**"):
-            r.text = clean(tok[2:-2]); r.bold = True
+            r = par.add_run(clean(tok[2:-2])); r.bold = True
         elif tok.startswith("`") and tok.endswith("`"):
-            r.text = clean(tok[1:-1]); r.font.name = SERIF
+            r = par.add_run(clean(tok[1:-1])); r.font.name = SERIF
             r.font.size = Pt(12); r.font.color.rgb = RGBColor(0, 0, 0)
         elif tok.startswith("_{") and tok.endswith("}"):
-            r.text = clean(tok[2:-1]); r.font.subscript = True
+            r = par.add_run(clean(tok[2:-1])); r.font.subscript = True
         elif tok.startswith("*") and tok.endswith("*") and len(tok) > 2:
-            r.text = clean(tok[1:-1]); r.italic = True
+            r = par.add_run(clean(tok[1:-1])); r.italic = True
         else:
-            r.text = clean(tok)
+            _emit_plain(par, clean(tok))
 
 
 def front_matter(doc):
