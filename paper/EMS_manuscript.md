@@ -44,22 +44,6 @@ OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
 
 ---
 
-## Code metadata
-
-| | |
-|---|---|
-| Current code version | v1.1.1 |
-| Permanent link to code / repository | https://github.com/vaspapa79/LakeForcing-OpenDrift (archived on Zenodo, concept DOI resolving to the latest version: https://doi.org/10.5281/zenodo.20627160) |
-| Reproducible test capsule | A small Delft3D sample in `tests/fixtures/` runs the σ-to-z exporter via `pytest` and GitHub-Actions CI with no Delft3D install; full hydrodynamic runs require the external engine |
-| Legal code licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
-| Code versioning system used | git |
-| Software code languages, tools and services used | Python 3.11; Delft3D 4.07.01 (FLOW + WAVE/SWAN, external engine); ERA5 (Copernicus CDS); HydroLAKES; GLOBathy; DAHITI |
-| Compilation requirements, operating environments and dependencies | xarray, numpy, scipy, pyproj, rasterio, netCDF4, cdsapi, matplotlib, cartopy; OpenDrift 1.14.9; Windows or Linux |
-| Link to developer documentation / manual | Repository README and the present manuscript |
-| Support email for questions | vaspapa@iti.gr |
-
----
-
 ## Graphical abstract
 
 [[GRAPHICAL_ABSTRACT]]
@@ -1076,9 +1060,11 @@ steps.
 | Operating systems | Windows and Linux (64-bit) |
 | Hardware requirements | Standard workstation; a multi-core CPU is recommended for the Delft3D-FLOW/WAVE runs |
 | Source-code size | approximately 0.2 MB (excluding generated data) |
+| Code versioning system | git |
 | Documentation | Repository README and the present manuscript |
 | Source repository | https://github.com/vaspapa79/LakeForcing-OpenDrift |
 | Permanent archive | Zenodo (concept DOI, latest version): https://doi.org/10.5281/zenodo.20627160 |
+| Reproducible test capsule | A small Delft3D sample in `tests/fixtures/` runs the σ-to-z exporter via `pytest` and GitHub-Actions CI with no Delft3D install; full hydrodynamic runs require the external engine |
 | Licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Availability and cost | Free and open source |
 
