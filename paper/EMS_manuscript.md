@@ -866,7 +866,13 @@ the standard closed-lake defaults (Table 2) — and the detailed surface circula
 basin is sensitive to such differences.
 The benchmark therefore confirms that the automated forcing reproduces the thermal field and
 the current magnitude of an expert-built model, while the directional field, which depends on
-the full model configuration, is not reproduced by the standard closed-lake default. We are therefore
+the full model configuration, is not reproduced by the standard closed-lake default. To probe
+the role of the omitted inflow specifically, we re-ran the auto configuration with the
+reservoir's river discharge enabled (the pipeline supports it as an optional boundary
+condition) and recomputed the comparison on the shared grid: the directional agreement does
+not improve — the complex vector correlation remains |ρ| ≈ 0.09 — which indicates that the
+difference reflects the broader configuration of the calibrated reference (its closure and
+numerical choices) rather than the river inflow alone. We are therefore
 explicit about what this benchmark does and does not establish: it validates the
 auto-generated *thermal field* and current *magnitude* against an expert-built reference, but
 it does not validate the current *direction* of the closed-lake configuration, because the
