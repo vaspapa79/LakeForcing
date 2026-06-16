@@ -78,17 +78,17 @@ def panel(ax, prefix, label):
             ax.plot(lon[0, 0], lat[0, 0], "*", color="yellow", ms=11,
                     mec="black", mew=0.6)
     ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([])
-    ax.set_title(label, fontsize=13)
+    ax.set_title(label, fontsize=16.5)
     return pm
 
 
 def main():
     n = len(LAKES); ncol = 4; nrow = (n + ncol - 1) // ncol
-    fig, axs = plt.subplots(nrow, ncol, figsize=(3.6 * ncol, 3.0 * nrow))
+    fig, axs = plt.subplots(nrow, ncol, figsize=(4.5 * ncol, 3.6 * nrow))
     # pack panels tightly: equal aspect already shrinks each axes within its
     # cell, so minimise the cell gaps to recover that space for the lakes
-    fig.subplots_adjust(left=0.012, right=0.988, top=0.888, bottom=0.012,
-                        wspace=0.04, hspace=0.20)
+    fig.subplots_adjust(left=0.012, right=0.988, top=0.86, bottom=0.012,
+                        wspace=0.04, hspace=0.32)
     pm = None
     for ax, (p, lab) in zip(np.ravel(axs), LAKES):
         r = panel(ax, p, lab)
@@ -96,10 +96,12 @@ def main():
             pm = r
     for ax in np.ravel(axs)[n:]:
         ax.axis("off")
-    fig.suptitle("Lake forcing pipeline demonstrated across twelve lakes\n"
-                 "colour = mean surface current speed (per-lake scale, blue=slow, red=fast); "
-                 "grey = land; black lines = 36 h trajectories; ★ release, • endpoints",
-                 fontsize=14, y=0.992)
+    fig.text(0.5, 0.99, "Lake forcing pipeline demonstrated across twelve lakes",
+             ha="center", va="top", fontsize=18, fontweight="bold")
+    fig.text(0.5, 0.95,
+             "colour = mean surface current speed (per-lake scale, blue=slow, red=fast); "
+             "grey = land; black lines = 36 h trajectories; ★ release, • endpoints",
+             ha="center", va="top", fontsize=14)
     fig.savefig(OUT / "figure_demonstration.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     print("wrote", OUT / "figure_demonstration.png")
