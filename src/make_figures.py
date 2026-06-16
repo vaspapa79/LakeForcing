@@ -446,7 +446,8 @@ def fig_vertical_sigma_z(prefix="erken"):
     # (a) temperature
     pm = axs[0].pcolormesh(hours, zk, np.ma.masked_invalid(T),
                            cmap="inferno", shading="auto")
-    fig.colorbar(pm, ax=axs[0], fraction=0.046, pad=0.02, label="temperature (°C)")
+    cb = fig.colorbar(pm, ax=axs[0], fraction=0.046, pad=0.02)
+    cb.set_label("temperature (°C)", fontsize=14); cb.ax.tick_params(labelsize=12.5)
     axs[0].set_title("(a) temperature on z-levels", fontsize=16.5)
     # (b) current speed on a logarithmic colour scale; clip zeros/tiny values
     # up to the floor so they fill with the lowest colour instead of white
@@ -455,12 +456,14 @@ def fig_vertical_sigma_z(prefix="erken"):
     Sm = np.ma.masked_invalid(np.clip(S, vmin, None))   # NaN (sub-bed) stays masked
     pm = axs[1].pcolormesh(hours, zk, Sm, cmap="viridis", shading="auto",
                            norm=LogNorm(vmin=vmin, vmax=np.nanmax(S)))
-    fig.colorbar(pm, ax=axs[1], fraction=0.046, pad=0.02,
-                 label="current speed (m s$^{-1}$, log scale)")
+    cb = fig.colorbar(pm, ax=axs[1], fraction=0.046, pad=0.02)
+    cb.set_label("current speed (m s$^{-1}$, log scale)", fontsize=14)
+    cb.ax.tick_params(labelsize=12.5)
     axs[1].set_title("(b) current speed on z-levels (log scale)", fontsize=16.5)
     for a in axs:
-        a.set_xlabel("hours"); a.set_ylim(ylo, yhi)
-    axs[0].set_ylabel("depth (m)")
+        a.set_xlabel("hours", fontsize=14); a.set_ylim(ylo, yhi)
+        a.tick_params(labelsize=12.5)
+    axs[0].set_ylabel("depth (m)", fontsize=14)
     # enlarge the panels and leave a clear gap between the suptitle and the panel
     # titles (reserve the top ~12 % of the figure for the suptitle)
     fig.tight_layout(rect=[0, 0, 1, 0.88])
