@@ -47,7 +47,7 @@ Lagrangian particle-tracking models such as OpenDrift (Dagestad et al., 2018) an
 (Delandmeter and van Sebille, 2019) are now standard tools for simulating the transport
 and fate of floating material — plastic debris, spilled oil, harmful-algal-bloom cells,
 fish eggs and larvae — in aquatic environments, from river-borne plastic pathways (Iskandar
-et al., 2022) to harmful-algal-bloom forecasting in large lakes (Zhou et al., 2023). In
+et al., 2022) to harmful-algal-bloom forecasting in large lakes (Wynne and Stumpf, 2015; Zhou et al., 2023). In
 these models the velocity of a buoyant
 particle is reconstructed as the vector sum of the Eulerian near-surface current, a
 wind-induced windage term, and the wave-driven Stokes drift (van den Bremer and Breivik,
@@ -62,12 +62,12 @@ tracker, so that the modelling task reduces to specifying the particle physics r
 producing the forcing.
 
 Inland waters break this workflow. Lakes and reservoirs hold the large majority of the
-planet's liquid surface freshwater (Messager et al., 2016) and act as acute receptors of
+planet's liquid surface freshwater (Lehner et al., 2011; Messager et al., 2016) and act as acute receptors of
 plastic pollution, oil spills, harmful algal blooms and a range of ecological transport
 processes. The first standardised cross-national survey of lake plastic debris detected
 contamination in every one of 38 lakes and reservoirs sampled, with surface concentrations
 in the most affected systems exceeding those reported for the great oceanic accumulation
-zones (Cózar et al., 2014; Nava et al., 2023); complementary global meta-analyses document
+zones (Cózar et al., 2014; Free et al., 2014; Nava et al., 2023); complementary global meta-analyses document
 pervasive microplastic pollution
 across lakes in 43 countries and identify lake morphometry and hydraulic residence time as
 primary controls on retention (Wagner et al., 2014; Chen et al., 2024). Quantifying where
@@ -264,7 +264,7 @@ approximation,
 [[EQ:magnus]]
 
 in which the coefficients `a = 17.625` and `b = 243.04` °C are the least-squares-optimised
-Magnus constants of Alduchov and Eskridge (1996); this parameterisation keeps the
+Magnus constants of Alduchov and Eskridge (1996), an optimised form of the classical Magnus (1844) relation; this parameterisation keeps the
 saturation-pressure error below 0.4 % over the −40 to +50 °C range that spans realistic
 lake-surface and air conditions, and is therefore preferable to the older Magnus–Tetens
 constants.
@@ -413,7 +413,7 @@ Galilee) the dominant waves are in intermediate-to-shallow water, so this approx
 degrades and bounds the Stokes magnitude there — a sensitivity that, as crossing-sea studies
 show, materially affects near-shore particle transport (Espenes et al., 2024). Substituting
 the finite-depth dispersion
-relation ω² = gk·tanh(kh) is a drop-in refinement that would remove this limitation
+relation ω² = gk·tanh(kh) — or a spectral Stokes-drift profile (Breivik et al., 2016) — is a drop-in refinement that would remove this limitation
 (Section 6).
 
 The four operations yield a single CF-compliant NetCDF that carries the currents, water
@@ -716,7 +716,7 @@ wave-induced Stokes drift; the distinction between surface-trapped and water-col
 is itself a recognised control on plastic fate (Oswald et al., 2025). For floating litter
 that additionally feels direct wind drag we
 ran each lake a second time with a windage term equal to 2 % of the 10 m wind (a
-wind_drift_factor of 0.02, the standard leeway for surface debris; Table 3, "+windage"
+wind_drift_factor of 0.02, the standard leeway for surface debris, following Breivik et al. (2011); Table 3, "+windage"
 column). Windage is not simply additive: because the ERA5 wind is spatially uniform over
 each basin it superimposes a near-uniform translation whose net effect depends on its
 alignment with the hydrodynamic drift. It amplifies the displacement where the two reinforce
@@ -724,7 +724,7 @@ alignment with the hydrodynamic drift. It amplifies the displacement where the t
 the wind opposes the current and Stokes drift (Sea of Galilee 3.5 to 1.1 km, Trasimeno
 3.4 to 2.0 km). Windage therefore typically dominates the net displacement of floating
 material — as it does in marine-debris studies (Chenillat et al., 2021; Iskandar et al.,
-2022) — while the current and Stokes fields set the
+2022), and with field surveys of macroplastic transport in transitional waters (Tramoy et al., 2019) — while the current and Stokes fields set the
 lake-specific spatial structure of the trajectories. Reporting both cases make the relative
 roles explicit and exercise every exported field (currents, Stokes drift and wind).
 
@@ -879,7 +879,7 @@ The benchmark of Section 5.6 is model-to-model; to test the exported fields agai
 observations we compared the auto-generated surface temperature with satellite lake surface
 water temperature (LSWT). For four of the demonstration lakes — Bornos (Spain), Lake Mead
 (USA), Trasimeno (Italy) and the Southern-Hemisphere winter reservoir Nova Ponte (Brazil) —
-a near-cloudless Landsat-8/9 Collection-2 Level-2 thermal-band overpass falls within, or
+a near-cloudless Landsat-8/9 Collection-2 Level-2 thermal-band overpass (Vermote et al., 2016) falls within, or
 within two days of, the 1–3 July 2022 simulation window. From each scene we built a
 clear-water skin-temperature field (using the Collection-2 `QA_PIXEL` water and cloud flags),
 binned it onto the model grid, and compared it with the exported surface temperature at the
@@ -925,7 +925,7 @@ Lakes or the Caspian Sea — spatial wind gradients drive an appreciable part of
 circulation, and a single column cannot represent them, as recent complex-wind-field lake
 modelling makes clear (Li et al., 2025). The same reanalysis also sets a
 resolution floor: ERA5's native ~31 km grid (or the ~9 km high-resolution sub-set)
-under-resolves the near-shore wind and the lake–land breeze, smoothing precisely the
+under-resolves the near-shore wind and the lake–land breeze (Crosman and Horel, 2010), smoothing precisely the
 gradients that matter most along the shoreline where floating material tends to accumulate.
 Both limitations are addressable within the existing file interface, by ingesting a
 spatially distributed wind field in place of a point time series.
@@ -939,7 +939,7 @@ the same generator at greater cost. The surface Stokes drift is, in turn, recons
 from bulk wave parameters through a deep-water, monochromatic approximation (Section 2.5),
 which reproduces the magnitude and direction of the surface drift but not its vertical
 decay; for deeply submerged or weakly buoyant tracers a spectral or depth-resolved Stokes
-profile (Breivik et al., 2014; van den Bremer and Breivik, 2018) would represent the
+profile (Breivik et al., 2014, 2016; van den Bremer and Breivik, 2018) would represent the
 near-surface shear more faithfully.
 
 Two further limitations stem from the input data and the physical configuration. Where
@@ -982,7 +982,7 @@ initialisation, an explicit salinity and temperature equation of state for salin
 minimum-depth treatment for thin shoreline cells, and a depth-dependent Stokes profile. Beyond these refinements, the
 natural next step is quantitative validation against in-situ drifter or tracer observations
 for individual lakes (Section 5.5) and, at scale, application of the workflow to a
-HydroLAKES sub-sample (Messager et al., 2016; Lehner and Döll, 2004) to build a standing,
+HydroLAKES sub-sample (Messager et al., 2016; Lehner and Döll, 2004; Verpoorter et al., 2014) to build a standing,
 openly distributed archive of lake forcing for community reuse.
 
 ---
@@ -1030,7 +1030,7 @@ of plastics, oil spills, harmful algal blooms and ecological transport, and prov
 reusable bridge — the σ-to-z exporter — that can make any existing Delft3D lake model
 OpenDrift-ready. The present results establish physical plausibility and generality rather
 than per-lake validation; coupling the openly released forcing to in-situ observations, and
-scaling the workflow toward a global, HydroLAKES-wide forcing archive, are the natural next
+scaling the workflow toward a global, HydroLAKES-wide forcing archive (Messager et al., 2016; Verpoorter et al., 2014), are the natural next
 steps.
 
 ---
@@ -1093,7 +1093,11 @@ Alduchov, O.A., Eskridge, R.E., 1996. Improved Magnus form approximation of satu
 
 Booij, N., Ris, R.C., Holthuijsen, L.H., 1999. A third-generation wave model for coastal regions: 1. Model description and validation. *J. Geophys. Res. Oceans* 104(C4), 7649–7666. https://doi.org/10.1029/98JC02622
 
+Breivik, Ø., Allen, A.A., Maisondieu, C., Roth, J.C., 2011. Wind-induced drift of objects at sea: the leeway field method. *Appl. Ocean Res.* 33, 100–109. https://doi.org/10.1016/j.apor.2011.01.005
+
 Breivik, Ø., Janssen, P.A.E.M., Bidlot, J.-R., 2014. Approximate Stokes drift profiles in deep water. *J. Phys. Oceanogr.* 44, 2433–2445. https://doi.org/10.1175/JPO-D-14-0020.1
+
+Breivik, Ø., Bidlot, J.-R., Janssen, P.A.E.M., 2016. A Stokes drift approximation based on the Phillips spectrum. *Ocean Modell.* 100, 49–56. https://doi.org/10.1016/j.ocemod.2016.01.005
 
 Chen, D., Wang, P., Liu, S., Wang, R., Wu, Y., Zhu, A.-X., Deng, C., 2024. Global patterns of lake microplastic pollution: insights from regional human development levels. *Sci. Total Environ.* 954, 176620. https://doi.org/10.1016/j.scitotenv.2024.176620
 
@@ -1101,11 +1105,15 @@ Chenillat, F., Huck, T., Maes, C., Grima, N., Blanke, B., 2021. Fate of floating
 
 Cózar, A., Echevarría, F., González-Gordillo, J.I., Irigoien, X., Úbeda, B., Hernández-León, S., Palma, Á.T., Navarro, S., García-de-Lomas, J., Ruiz, A., Fernández-de-Puelles, M.L., Duarte, C.M., 2014. Plastic debris in the open ocean. *Proc. Natl. Acad. Sci. USA* 111, 10239–10244. https://doi.org/10.1073/pnas.1314705111
 
+Crosman, E.T., Horel, J.D., 2010. Sea and lake breezes: a review of numerical studies. *Bound.-Layer Meteorol.* 137, 1–29. https://doi.org/10.1007/s10546-010-9517-9
+
 Dagestad, K.-F., Röhrs, J., Breivik, Ø., Ådlandsvik, B., 2018. OpenDrift v1.0: a generic framework for trajectory modelling. *Geosci. Model Dev.* 11, 1405–1420. https://doi.org/10.5194/gmd-11-1405-2018
 
 Delandmeter, P., van Sebille, E., 2019. The Parcels v2.0 Lagrangian framework: new field interpolation schemes. *Geosci. Model Dev.* 12, 3571–3584. https://doi.org/10.5194/gmd-12-3571-2019
 
 Espenes, H., Carrasco, A., Dagestad, K.-F., Christensen, K.H., Drivdal, M., Isachsen, P.E., 2024. Stokes drift in crossing windsea and swell, and its effect on near-shore particle transport in Lofoten, Northern Norway. *Ocean Modell.* 191, 102407. https://doi.org/10.1016/j.ocemod.2024.102407
+
+Free, C.M., Jensen, O.P., Mason, S.A., Eriksen, M., Williamson, N.J., Boldgiv, B., 2014. High-levels of microplastic pollution in a large, remote, mountain lake. *Mar. Pollut. Bull.* 85, 156–163. https://doi.org/10.1016/j.marpolbul.2014.06.001
 
 Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A., Muñoz-Sabater, J., Nicolas, J., Peubey, C., Radu, R., Schepers, D., Simmons, A., Soci, C., Abdalla, S., Abellan, X., Balsamo, G., Bechtold, P., Biavati, G., Bidlot, J., Bonavita, M., De Chiara, G., Dahlgren, P., Dee, D., Diamantakis, M., Dragani, R., Flemming, J., Forbes, R., Fuentes, M., Geer, A., Haimberger, L., Healy, S., Hogan, R.J., Hólm, E., Janisková, M., Keeley, S., Laloyaux, P., Lopez, P., Lupu, C., Radnoti, G., de Rosnay, P., Rozum, I., Vamborg, F., Villaume, S., Thépaut, J.-N., 2020. The ERA5 global reanalysis. *Q. J. R. Meteorol. Soc.* 146, 1999–2049. https://doi.org/10.1002/qj.3803
 
@@ -1121,9 +1129,13 @@ Kukulka, T., Proskurowski, G., Morét-Ferguson, S., Meyer, D.W., Law, K.L., 2012
 
 Lehner, B., Döll, P., 2004. Development and validation of a global database of lakes, reservoirs and wetlands. *J. Hydrol.* 296, 1–22. https://doi.org/10.1016/j.jhydrol.2004.03.028
 
+Lehner, B., Liermann, C.R., Revenga, C., Vörösmarty, C., Fekete, B., Crouzet, P., Döll, P., Endejan, M., Frenken, K., Magome, J., Nilsson, C., Robertson, J.C., Rödel, R., Sindorf, N., Wisser, D., 2011. High-resolution mapping of the world's reservoirs and dams for sustainable river-flow management. *Front. Ecol. Environ.* 9, 494–502. https://doi.org/10.1890/100125
+
 Lesser, G., Roelvink, J., van Kester, J., Stelling, G., 2004. Development and validation of a three-dimensional morphological model. *Coastal Eng.* 51, 883–915. https://doi.org/10.1016/j.coastaleng.2004.07.014
 
 Li, J., Zhang, Y., Li, Y., Ma, K., Wang, Z., Zhang, X., Yi, Y., Lu, P., Gao, Z., Wang, M., 2025. Wind-generated flow modeling and future circulation prediction of lakes under complex wind field — a case study of Qinghai Lake. *Environ. Model. Softw.* 187, 106371. https://doi.org/10.1016/j.envsoft.2025.106371
+
+Magnus, G., 1844. Versuche über die Spannkräfte des Wasserdampfs. *Ann. Phys.* 137, 225–247. https://doi.org/10.1002/andp.18441370202
 
 Maurer, C., Rensheng Qi, Raghavan, V., 2003. A linear time algorithm for computing exact Euclidean distance transforms of binary images in arbitrary dimensions. *IEEE Trans. Pattern Anal. Mach. Intell.* 25, 265–270. https://doi.org/10.1109/TPAMI.2003.1177156
 
@@ -1143,14 +1155,22 @@ Schwatke, C., Dettmering, D., Bosch, W., Seitz, F., 2015. DAHITI – an innovati
 
 Snyder, J.P., 1987. Map Projections — A Working Manual. *U.S. Geological Survey Professional Paper* 1395. U.S. Government Printing Office, Washington, D.C. https://doi.org/10.3133/pp1395
 
+Tramoy, R., Gasperi, J., Colasse, L., Silvestre, M., Breton, J., Puech, P., Tassin, B., 2019. Transfer dynamics of macroplastics in estuaries — new insights from a long-term survey on the Seine estuary, western Europe. *Mar. Pollut. Bull.* 143, 26–34. https://doi.org/10.1016/j.marpolbul.2019.04.018
+
 Umlauf, L., Burchard, H., 2003. A generic length-scale equation for geophysical turbulence models. *J. Mar. Res.* 61, 235–265. https://doi.org/10.1357/002224003322005087
 
 van den Bremer, T.S., Breivik, Ø., 2018. Stokes drift. *Phil. Trans. R. Soc. A* 376, 20170104. https://doi.org/10.1098/rsta.2017.0104
 
 van Sebille, E., Aliani, S., Law, K.L., Maximenko, N., Alsina, J.M., Bagaev, A., Bergmann, M., Chapron, B., Chubarenko, I., Cózar, A., Delandmeter, P., Egger, M., Fox-Kemper, B., Garaba, S.P., Goddijn-Murphy, L., Hardesty, B.D., Hoffman, M.J., Isobe, A., Jongedijk, C.E., Kaandorp, M.L.A., Khatmullina, L., Koelmans, A.A., Kukulka, T., Laufkötter, C., Lebreton, L., Lobelle, D., Maes, C., Martinez-Vicente, V., Morales Maqueda, M.A., Poulain-Zarcos, M., Rodríguez, E., Ryan, P.G., Shanks, A.L., Shim, W.J., Suaria, G., Thiel, M., van den Bremer, T.S., Wichmann, D., 2020. The physical oceanography of the transport of floating marine debris. *Environ. Res. Lett.* 15, 023003. https://doi.org/10.1088/1748-9326/ab6d7d
 
+Vermote, E., Justice, C., Claverie, M., Franch, B., 2016. Preliminary analysis of the performance of the Landsat 8/OLI land surface reflectance product. *Remote Sens. Environ.* 185, 46–56. https://doi.org/10.1016/j.rse.2016.04.008
+
+Verpoorter, C., Kutser, T., Seekell, D.A., Tranvik, L.J., 2014. A global inventory of lakes based on high-resolution satellite imagery. *Geophys. Res. Lett.* 41, 6396–6402. https://doi.org/10.1029/2014GL060641
+
 Wagner, M., Scherer, C., Alvarez-Muñoz, D., Brennholt, N., Bourrain, X., Buchinger, S., Fries, E., Grosbois, C., Klasmeier, J., Marti, T., Rodriguez-Mozaz, S., Urbatzka, R., Vethaak, A.D., Winther-Nielsen, M., Reifferscheid, G., 2014. Microplastics in freshwater ecosystems: what we know and what we need to know. *Environ. Sci. Eur.* 26, 12. https://doi.org/10.1186/s12302-014-0012-7
 
 Wüest, A., Lorke, A., 2003. Small-scale hydrodynamics in lakes. *Annu. Rev. Fluid Mech.* 35, 373–412. https://doi.org/10.1146/annurev.fluid.35.101101.161220
+
+Wynne, T.T., Stumpf, R.P., 2015. Spatial and temporal patterns in the seasonal distribution of toxic cyanobacteria in western Lake Erie from 2002–2014. *Toxins* 7, 1649–1663. https://doi.org/10.3390/toxins7051649
 
 Zhou, X., Rowe, M., Liu, Q., Xue, P., 2023. Comparison of Eulerian and Lagrangian transport models for harmful algal bloom forecasts in Lake Erie. *Environ. Model. Softw.* 162, 105641. https://doi.org/10.1016/j.envsoft.2023.105641
