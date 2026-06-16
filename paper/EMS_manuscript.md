@@ -10,34 +10,29 @@ Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzid
 
 ## Abstract
 Lagrangian particle tracking is a standard tool for studying the transport and fate of
-floating material — plastics, oil, harmful-algal-bloom cells, fish larvae — and recent
-cross-national surveys rank inland lakes and reservoirs among the most acutely
-plastic-polluted freshwaters on Earth (Nava et al., 2023; Chen et al., 2024). Yet
-lake-scale transport modelling is hampered by the absence of ready-made forcing: global
-ocean reanalyses are masked to the marine domain, and lake hydrodynamic models are still
-built by hand, one waterbody at a time. We present LakeForcing-OpenDrift, an open,
+floating material — plastics, oil, harmful-algal-bloom cells, fish larvae — and inland lakes
+and reservoirs are now recognised among the most acutely plastic-polluted freshwaters on
+Earth. Yet lake-scale transport modelling is hampered by the absence of ready-made forcing:
+global ocean reanalyses are masked to the marine domain, and lake hydrodynamic models are
+still built by hand, one waterbody at a time. We present LakeForcing-OpenDrift, an open,
 reproducible Python pipeline that assembles bathymetry and meteorology from open global
 sources, automatically configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE (SWAN)
 simulation for an arbitrary lake, and exports CF-compliant NetCDF that drives the OpenDrift
 particle tracker without modification. Its methodological core is a fully specified σ-to-z
-reconstruction that, together with the curvilinear-to-geographic velocity rotation and a
-surface Stokes-drift derivation, renders terrain-following lake hydrodynamics ingestible by
-a generic ocean tracker. We give the governing relations, document the automated closed-lake
-model generation, and demonstrate the pipeline on twelve lakes spanning all inhabited
-continents (36°S–60°N, shallow to deep, tropical to boreal) — eleven auto-configured from
-open data and a twelfth reusing an expert-built model as an export-path control, all carried
-through the same unmodified code. The simulated 36-h surface transport spans an order of
-magnitude and varies coherently with each lake's size, depth, fetch and wind exposure,
-establishing physical plausibility and internal consistency rather than in-situ validation.
-The per-lake displacements are single-release values; a release-point ensemble confirms the
-cross-lake ranking is robust, while the magnitude in the smallest, most sheltered basins is
-seed-sensitive. Against the expert-built reference the automated forcing reproduces surface
-temperature to
-0.85 °C RMSE and current speed to 1.5 cm s⁻¹ (r = 0.80); against independent satellite
-lake-surface temperature for four further lakes it is correct in regime but runs cold during
-the July-2022 heatwave, bounding the cost of climatological initialisation. The toolchain and
-the twelve-lake forcing dataset are released under permissive licences, removing the forcing
-bottleneck for lake-scale transport studies.
+reconstruction that, with the curvilinear-to-geographic velocity rotation and a surface
+Stokes-drift derivation, renders terrain-following lake hydrodynamics ingestible by a generic
+ocean tracker. We demonstrate the pipeline on twelve lakes spanning all inhabited continents
+(36°S–60°N, shallow to deep, tropical to boreal) — eleven auto-configured from open data and a
+twelfth reusing an expert-built model as an export-path control — all carried through the same
+unmodified code. The simulated 36-h surface transport spans an order of magnitude and varies
+coherently with each lake's size, depth, fetch and wind exposure, establishing physical
+plausibility rather than in-situ validation; a release-point ensemble confirms the cross-lake
+ranking is robust, while individual magnitudes are seed-sensitive. Against the expert-built
+reference the forcing reproduces surface temperature to 0.85 °C RMSE and current speed to
+1.5 cm s⁻¹ (r = 0.80), and against satellite lake-surface temperature for four further lakes
+it is correct in regime but runs cold under the July-2022 heatwave, bounding the cost of
+climatological initialisation. The toolchain and the twelve-lake forcing dataset are released
+under permissive licences, removing the forcing bottleneck for lake-scale transport studies.
 
 **Keywords:** Lake hydrodynamics; Wind-wave modelling (SWAN); Sigma-to-z coupling;
 OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow

@@ -338,6 +338,13 @@ def main():
     for sec in doc.sections:
         sec.top_margin = Inches(0.6); sec.bottom_margin = Inches(0.6)
         sec.left_margin = Inches(0.65); sec.right_margin = Inches(0.65)
+        # continuous line numbers for peer review (Elsevier/EMS requirement)
+        sectPr = sec._sectPr
+        ln = OxmlElement("w:lnNumType")
+        ln.set(qn("w:countBy"), "1"); ln.set(qn("w:restart"), "continuous")
+        ln.set(qn("w:distance"), "360")
+        cols = sectPr.find(qn("w:cols"))
+        (cols.addprevious(ln) if cols is not None else sectPr.append(ln))
     # base style: Times New Roman, justified, larger & tighter
     normal = doc.styles["Normal"]
     normal.font.name = SERIF; normal.font.size = Pt(10)
