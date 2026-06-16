@@ -347,7 +347,7 @@ def fig_lake_map():
                    lw=0.8, zorder=5, **kw)
         dx, dy = off[k]
         ax.annotate(d["name"], xy=(d["lon"], d["lat"]),
-                    xytext=(d["lon"] + dx, d["lat"] + dy), fontsize=13.8,
+                    xytext=(d["lon"] + dx, d["lat"] + dy), fontsize=14,
                     fontweight="bold", zorder=6,
                     arrowprops=dict(arrowstyle="-", lw=0.5, color="#555"),
                     **(dict(transform=tf) if tf else {}))
@@ -355,10 +355,10 @@ def fig_lake_map():
                   markeredgecolor="k", markersize=10, label="natural lake"),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=ORANGE,
                   markeredgecolor="k", markersize=10, label="reservoir")]
-    ax.legend(handles=leg, loc="lower left", fontsize=13.5, frameon=True)
+    ax.legend(handles=leg, loc="lower left", fontsize=14, frameon=True)
     ax.set_title("Geographic distribution of the twelve demonstration lakes\n"
                  "(marker size ∝ 36 h mean drift; 36°S to 60°N, all inhabited continents)",
-                 fontsize=16.5, pad=3)
+                 fontsize=18, pad=4)
     fig.savefig(DOCS / "figure_lake_map.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
