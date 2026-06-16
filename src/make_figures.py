@@ -464,11 +464,11 @@ def fig_vertical_sigma_z(prefix="erken"):
         a.set_xlabel("hours", fontsize=14); a.set_ylim(ylo, yhi)
         a.tick_params(labelsize=12.5)
     axs[0].set_ylabel("depth (m)", fontsize=14)
-    # enlarge the panels and leave a clear gap between the suptitle and the panel
-    # titles (reserve the top ~12 % of the figure for the suptitle)
-    fig.tight_layout(rect=[0, 0, 1, 0.88])
+    # enlarge the panels and leave a small gap between the suptitle and the panel
+    # titles (reserve a thin top strip for the suptitle)
+    fig.tight_layout(rect=[0, 0, 1, 0.90])
     fig.suptitle(f"{LAKES[prefix]['name']}: depth-resolved forcing from the σ-to-z "
-                 "coupling (deepest column, 2-day run)", fontsize=18, y=0.99)
+                 "coupling (deepest column, 2-day run)", fontsize=18, y=0.97)
     fig.savefig(OUT / "figure_vertical_sigma_z.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
