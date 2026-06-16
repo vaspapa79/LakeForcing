@@ -86,7 +86,7 @@ def build_cover_letter():
                 r = p.add_run(part); r.bold = bold; r.italic = italic
         return p
 
-    para("12 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
+    para("16 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
     para("To the Editors-in-Chief,\nEnvironmental Modelling & Software",
          align=WD_ALIGN_PARAGRAPH.LEFT, after=12)
 
