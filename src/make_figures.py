@@ -367,17 +367,17 @@ def fig_lake_map():
 
 # --------------------------------------------------------------------------- #
 def fig_drift_scatter():
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6))
+    fig, axes = plt.subplots(1, 2, figsize=(16, 7))
     names = list(LAKES)
     dmean = np.array([LAKES[k]["dmean"] for k in names])
     drift = np.array([LAKES[k]["drift"] for k in names])
     cols = [GREEN if LAKES[k]["type"] == "natural" else ORANGE for k in names]
 
     ax = axes[0]
-    ax.scatter(dmean, drift, c=cols, s=110, edgecolor="black", lw=0.8, zorder=3)
+    ax.scatter(dmean, drift, c=cols, s=160, edgecolor="black", lw=0.9, zorder=3)
     for k in names:
         ax.annotate(LAKES[k]["name"], (LAKES[k]["dmean"], LAKES[k]["drift"]),
-                    textcoords="offset points", xytext=(6, 4), fontsize=12.5)
+                    textcoords="offset points", xytext=(6, 4), fontsize=13.5)
     ax.set_xlabel("approx. mean depth (m)", fontsize=14)
     ax.set_ylabel("36 h mean drift (m)", fontsize=14)
     ax.tick_params(labelsize=12.5)
@@ -391,10 +391,10 @@ def fig_drift_scatter():
             "nova_ponte":0.030}
     ax = axes[1]
     uu = np.array([umax[k] for k in names])
-    ax.scatter(uu, drift, c=cols, s=110, edgecolor="black", lw=0.8, zorder=3)
+    ax.scatter(uu, drift, c=cols, s=160, edgecolor="black", lw=0.9, zorder=3)
     for k in names:
         ax.annotate(LAKES[k]["name"], (umax[k], LAKES[k]["drift"]),
-                    textcoords="offset points", xytext=(6, 4), fontsize=12.5)
+                    textcoords="offset points", xytext=(6, 4), fontsize=13.5)
     ax.set_xscale("log")
     ax.set_xlabel("max surface current |U|$_{max}$ (m s$^{-1}$)", fontsize=14)
     ax.set_ylabel("36 h mean drift (m)", fontsize=14)
@@ -402,15 +402,15 @@ def fig_drift_scatter():
     ax.set_title("(b) Transport vs. current strength", fontsize=16.5)
     ax.grid(alpha=0.3, which="both")
     leg = [Line2D([0],[0],marker="o",color="w",markerfacecolor=GREEN,
-                  markeredgecolor="k",markersize=10,label="natural"),
+                  markeredgecolor="k",markersize=12,label="natural"),
            Line2D([0],[0],marker="o",color="w",markerfacecolor=ORANGE,
-                  markeredgecolor="k",markersize=10,label="reservoir")]
-    ax.legend(handles=leg, fontsize=13.5, loc="lower right")
-    fig.tight_layout(rect=[0, 0, 1, 0.90])
-    fig.suptitle("Transport across the twelve lakes; drift reflects basin size, "
-                 "depth, fetch and wind exposure — not peak current alone "
+                  markeredgecolor="k",markersize=12,label="reservoir")]
+    ax.legend(handles=leg, fontsize=14, loc="lower right")
+    fig.tight_layout(rect=[0, 0, 1, 0.88])
+    fig.suptitle("Transport across the twelve lakes; drift reflects basin size, depth, "
+                 "fetch and wind exposure —\nnot peak current alone "
                  "(cf. Polyfytos: strong localised river jet, moderate drift)",
-                 fontsize=15.8, y=0.975)
+                 fontsize=18, y=0.98)
     fig.savefig(DOCS / "figure_drift_scatter.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
