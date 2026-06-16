@@ -616,7 +616,7 @@ but covering this range with identical code is the property under test.
 **Table 3.** The twelve demonstration lakes and key model outputs. Regulation is the single
 natural/reservoir axis; morphology is conveyed by the depth columns. |U|_{max} = maximum
 surface current speed; H_{s,max} = maximum significant wave height. The drift columns give the
-36 h mean net particle displacement: the single-release current+Stokes case, the median of a
+36-h mean net particle displacement: the single-release current+Stokes case, the median of a
 five-point release-point ensemble (Section 5.3), and the floating-litter case with 2 % windage
 added (Section 5.2). Comparing the ensemble median with the single-release value shows that the
 cross-lake ranking is robust (Spearman ρ = 0.74) while individual magnitudes are seed-sensitive,
@@ -724,11 +724,11 @@ the behaviour expected of the third-generation SWAN growth physics on enclosed w
 ### 5.2 Surface transport
 
 Figure 6 overlays, for each lake, the time-mean surface-current field (on a per-lake colour
-scale) with the 36 h trajectories of the 400 released particles and their common release
+scale) with the 36-h trajectories of the 400 released particles and their common release
 point. The trajectories remain within the basin in every case — confirming that the
 all-water landmask and data-coverage stranding of Section 2.6 behave as intended — and
 disperse from the compact release disk into elongated, wind-aligned plumes whose spread
-reflects the spatial variability of the current field. The resulting 36 h mean net
+reflects the spatial variability of the current field. The resulting 36-h mean net
 displacement D_{i} varies over an order of magnitude, from 0.34 km in the small, deep,
 sheltered Rotsee to 3.7 km in the large, shallow, fetch-exposed Poyang (Table 3,
 "current+Stokes" column). Because every one of the twelve was carried through the same
@@ -757,7 +757,7 @@ roles explicit and exercise every exported field (currents, Stokes drift and win
 
 ### 5.3 Physical consistency
 
-Figure 7 plots the 36 h current+Stokes drift against lake mean depth and against peak
+Figure 7 plots the 36-h current+Stokes drift against lake mean depth and against peak
 current speed. With only twelve lakes these relationships are best read as rank tendencies
 rather than fits, so we quantify them with Spearman rank correlations. The drift correlates
 positively and significantly with surface area (ρ = +0.63, p = 0.03) and, more weakly, with
@@ -781,7 +781,7 @@ lakes for which the pipeline was never tuned.
 
 Because each lake's drift is computed from a single release point in one summer window, we
 tested its robustness to the release location by re-seeding every lake from an ensemble of
-five independent interior points and recomputing the 36 h drift. The cross-lake ranking is
+five independent interior points and recomputing the 36-h drift. The cross-lake ranking is
 robustly preserved: the primary seeding and the ensemble median order the twelve lakes almost
 identically (Spearman ρ = 0.74, p = 0.006), and the order-of-magnitude spread is reproduced.
 Within a lake, the drift varies by a median inter-quartile range of about 19 % of the median
