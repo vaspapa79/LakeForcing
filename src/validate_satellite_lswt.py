@@ -182,18 +182,20 @@ def main():
             pm = a.pcolormesh(np.ma.masked_invalid(fld), cmap="RdYlBu_r",
                               vmin=vmin, vmax=vmax, shading="auto")
             a.set_xticks([]); a.set_yticks([]); a.set_aspect("equal")
-            a.set_title(t, fontsize=12.5)
-            fig.colorbar(pm, ax=a, fraction=0.046, pad=0.02, label="°C")
+            a.set_title(t, fontsize=13.5)
+            cb = fig.colorbar(pm, ax=a, fraction=0.046, pad=0.02)
+            cb.set_label("°C", fontsize=13); cb.ax.tick_params(labelsize=12)
         ax = axs[r, 2]
         ax.plot(sat[co], mod[co], ".", ms=2.0, alpha=0.30, color="#c0392b")
         lo, hi = vmin, vmax
         ax.plot([lo, hi], [lo, hi], "k--", lw=1, label="1:1")
         ax.set_xlim(lo, hi); ax.set_ylim(lo, hi); ax.set_aspect("equal")
-        ax.set_xlabel("satellite LSWT (°C)", fontsize=12)
-        ax.set_ylabel("model surface T (°C)", fontsize=12)
+        ax.set_xlabel("satellite LSWT (°C)", fontsize=13.5)
+        ax.set_ylabel("model surface T (°C)", fontsize=13.5)
+        ax.tick_params(labelsize=12)
         rtxt = f", r {rr:.2f}" if np.isfinite(rr) else ""
         ax.set_title(f"{label}\nmodel − satellite = {bias:+.1f} °C{rtxt}",
-                     fontsize=12.5)
+                     fontsize=13.5)
 
     fig.suptitle("Independent validation: exported surface temperature vs satellite "
                  "lake surface water temperature\n(Landsat-8/9 Collection-2 Level-2 "
