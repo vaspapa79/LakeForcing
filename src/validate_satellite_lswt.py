@@ -122,7 +122,8 @@ def bin_to_model(LON, LAT, val, mlon, mlat):
 def main():
     cat = Client.open(MPC, modifier=pc.sign_inplace)
     results = {}
-    fig, axs = plt.subplots(len(LAKES), 3, figsize=(15, 4.6 * len(LAKES)))
+    fig, axs = plt.subplots(len(LAKES), 3, figsize=(17.5, 5.0 * len(LAKES)),
+                            gridspec_kw={"width_ratios": [1.12, 1.12, 1.0]})
     if len(LAKES) == 1:
         axs = axs[None, :]
 
@@ -182,25 +183,25 @@ def main():
             pm = a.pcolormesh(np.ma.masked_invalid(fld), cmap="RdYlBu_r",
                               vmin=vmin, vmax=vmax, shading="auto")
             a.set_xticks([]); a.set_yticks([]); a.set_aspect("equal")
-            a.set_title(t, fontsize=13.5)
-            cb = fig.colorbar(pm, ax=a, fraction=0.046, pad=0.02)
-            cb.set_label("°C", fontsize=13); cb.ax.tick_params(labelsize=12)
+            a.set_title(t, fontsize=16.5)
+            cb = fig.colorbar(pm, ax=a, fraction=0.04, pad=0.02, shrink=0.78)
+            cb.set_label("°C", fontsize=14); cb.ax.tick_params(labelsize=12.5)
         ax = axs[r, 2]
         ax.plot(sat[co], mod[co], ".", ms=2.0, alpha=0.30, color="#c0392b")
         lo, hi = vmin, vmax
         ax.plot([lo, hi], [lo, hi], "k--", lw=1, label="1:1")
         ax.set_xlim(lo, hi); ax.set_ylim(lo, hi); ax.set_aspect("equal")
-        ax.set_xlabel("satellite LSWT (°C)", fontsize=13.5)
-        ax.set_ylabel("model surface T (°C)", fontsize=13.5)
-        ax.tick_params(labelsize=12)
+        ax.set_xlabel("satellite LSWT (°C)", fontsize=14)
+        ax.set_ylabel("model surface T (°C)", fontsize=14)
+        ax.tick_params(labelsize=12.5)
         rtxt = f", r {rr:.2f}" if np.isfinite(rr) else ""
         ax.set_title(f"{label}\nmodel − satellite = {bias:+.1f} °C{rtxt}",
-                     fontsize=13.5)
+                     fontsize=16.5)
 
     fig.suptitle("Independent validation: exported surface temperature vs satellite "
                  "lake surface water temperature\n(Landsat-8/9 Collection-2 Level-2 "
                  "thermal band, near-cloudless overpasses, 29 Jun – 3 Jul 2022)",
-                 fontsize=15, y=0.997)
+                 fontsize=18, y=0.997)
     fig.tight_layout(rect=[0, 0, 1, 0.985])
     out = ROOT / "docs" / "figure_satellite.png"
     fig.savefig(out, dpi=300, bbox_inches="tight", facecolor="white")
