@@ -396,9 +396,15 @@ def main():
         if in_refs:
             emit_reference(doc, s); i += 1; continue
         if s.startswith("- "):
+            buf = [s[2:]]; i += 1                       # gather wrapped continuation lines
+            while i < len(body):
+                nx = body[i].strip()
+                if not nx or nx == "---" or nx.startswith(("#", "- ", "|", "[[")):
+                    break
+                buf.append(nx); i += 1
             p = doc.add_paragraph(style="List Bullet")
-            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-            add_runs(p, s[2:]); i += 1; continue
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            add_runs(p, " ".join(buf)); continue
         # paragraph (gather wrapped lines)
         buf = [s]; i += 1
         while i < len(body):
