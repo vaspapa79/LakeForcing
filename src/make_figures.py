@@ -442,7 +442,7 @@ def fig_vertical_sigma_z(prefix="erken"):
     ze = _cell_edges(zk)
     ylo, yhi = ze.min(), ze.max()                  # crop white space below bed
 
-    fig, axs = plt.subplots(1, 2, figsize=(13, 4.6))
+    fig, axs = plt.subplots(1, 2, figsize=(13, 5.4))
     # (a) temperature
     pm = axs[0].pcolormesh(hours, zk, np.ma.masked_invalid(T),
                            cmap="inferno", shading="auto")
@@ -461,8 +461,11 @@ def fig_vertical_sigma_z(prefix="erken"):
     for a in axs:
         a.set_xlabel("hours"); a.set_ylim(ylo, yhi)
     axs[0].set_ylabel("depth (m)")
+    # enlarge the panels and leave a clear gap between the suptitle and the panel
+    # titles (reserve the top ~12 % of the figure for the suptitle)
+    fig.tight_layout(rect=[0, 0, 1, 0.88])
     fig.suptitle(f"{LAKES[prefix]['name']}: depth-resolved forcing from the σ-to-z "
-                 "coupling (deepest column, 2-day run)", fontsize=18)
+                 "coupling (deepest column, 2-day run)", fontsize=18, y=0.99)
     fig.savefig(OUT / "figure_vertical_sigma_z.png", dpi=300, bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
