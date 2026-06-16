@@ -724,7 +724,7 @@ alignment with the hydrodynamic drift. It amplifies the displacement where the t
 the wind opposes the current and Stokes drift (Sea of Galilee 3.5 to 1.1 km, Trasimeno
 3.4 to 2.0 km). Windage therefore typically dominates the net displacement of floating
 material — as it does in marine-debris studies (Chenillat et al., 2021; Iskandar et al.,
-2022), and with field surveys of macroplastic transport in transitional waters (Tramoy et al., 2019) — while the current and Stokes fields set the
+2022), and with field surveys of macroplastic transport in transitional waters (Tramoy et al., 2020) — while the current and Stokes fields set the
 lake-specific spatial structure of the trajectories. Reporting both cases make the relative
 roles explicit and exercise every exported field (currents, Stokes drift and wind).
 
@@ -1155,7 +1155,7 @@ Schwatke, C., Dettmering, D., Bosch, W., Seitz, F., 2015. DAHITI – an innovati
 
 Snyder, J.P., 1987. Map Projections — A Working Manual. *U.S. Geological Survey Professional Paper* 1395. U.S. Government Printing Office, Washington, D.C. https://doi.org/10.3133/pp1395
 
-Tramoy, R., Gasperi, J., Colasse, L., Silvestre, M., Breton, J., Puech, P., Tassin, B., 2019. Transfer dynamics of macroplastics in estuaries — new insights from a long-term survey on the Seine estuary, western Europe. *Mar. Pollut. Bull.* 143, 26–34. https://doi.org/10.1016/j.marpolbul.2019.04.018
+Tramoy, R., Gasperi, J., Colasse, L., Tassin, B., 2020. Transfer dynamic of macroplastics in estuaries — new insights from the Seine estuary: Part 1. Long-term dynamic based on date-prints on stranded debris. *Mar. Pollut. Bull.* 152, 110894. https://doi.org/10.1016/j.marpolbul.2020.110894
 
 Umlauf, L., Burchard, H., 2003. A generic length-scale equation for geophysical turbulence models. *J. Mar. Res.* 61, 235–265. https://doi.org/10.1357/002224003322005087
 
@@ -1165,7 +1165,7 @@ van Sebille, E., Aliani, S., Law, K.L., Maximenko, N., Alsina, J.M., Bagaev, A.,
 
 Vermote, E., Justice, C., Claverie, M., Franch, B., 2016. Preliminary analysis of the performance of the Landsat 8/OLI land surface reflectance product. *Remote Sens. Environ.* 185, 46–56. https://doi.org/10.1016/j.rse.2016.04.008
 
-Verpoorter, C., Kutser, T., Seekell, D.A., Tranvik, L.J., 2014. A global inventory of lakes based on high-resolution satellite imagery. *Geophys. Res. Lett.* 41, 6396–6402. https://doi.org/10.1029/2014GL060641
+Verpoorter, C., Kutser, T., Seekell, D.A., Tranvik, L.J., 2014. A global inventory of lakes based on high-resolution satellite imagery. *Geophys. Res. Lett.* 41, 6396–6402. https://doi.org/10.1002/2014GL060641
 
 Wagner, M., Scherer, C., Alvarez-Muñoz, D., Brennholt, N., Bourrain, X., Buchinger, S., Fries, E., Grosbois, C., Klasmeier, J., Marti, T., Rodriguez-Mozaz, S., Urbatzka, R., Vethaak, A.D., Winther-Nielsen, M., Reifferscheid, G., 2014. Microplastics in freshwater ecosystems: what we know and what we need to know. *Environ. Sci. Eur.* 26, 12. https://doi.org/10.1186/s12302-014-0012-7
 
