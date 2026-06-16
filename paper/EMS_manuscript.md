@@ -860,9 +860,10 @@ RMSE of 0.85 °C (bias +0.30 °C), and the surface-current speed to an RMSE of 1
 a Pearson correlation of r = 0.80. The current *direction*, by contrast, agrees poorly
 (complex vector correlation |ρ| = 0.10). The two configurations share the grid and the
 meteorological forcing but differ in several respects — the hand-built model includes the
-reservoir's river discharges and salinity transport in a calibrated, site-specific setup,
-whereas the auto configuration applies only the standard closed-lake defaults (Table 2) — and
-the detailed surface circulation of a deep stratifying basin is sensitive to such differences.
+reservoir's river discharges and a calibrated, site-specific configuration (turbulence
+closure, numerical and initialisation choices), whereas the auto configuration applies only
+the standard closed-lake defaults (Table 2) — and the detailed surface circulation of a deep
+basin is sensitive to such differences.
 The benchmark therefore confirms that the automated forcing reproduces the thermal field and
 the current magnitude of an expert-built model, while the directional field, which depends on
 the full model configuration, is not reproduced by the standard closed-lake default. We are therefore
@@ -870,7 +871,7 @@ explicit about what this benchmark does and does not establish: it validates the
 auto-generated *thermal field* and current *magnitude* against an expert-built reference, but
 it does not validate the current *direction* of the closed-lake configuration, because the
 only directional reference available here is itself shaped by the calibrated, site-specific
-setup of the hand-built model — its river discharges, salinity transport and closure choices —
+setup of the hand-built model — its river discharges and its closure and numerical choices —
 which the standard defaults do not replicate. The satellite comparison of Section 5.7 likewise constrains the thermal field
 rather than the currents. Independent validation of current direction — the quantity that
 most directly governs where particles go — against in-situ drifters or ADCP moorings is thus
