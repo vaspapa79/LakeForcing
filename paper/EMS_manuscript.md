@@ -1085,7 +1085,10 @@ Hellas (CERTH-ITI).
 
 ## Acknowledgements
 The authors thank the developers of Delft3D (Deltares) and OpenDrift, and the providers of
-the open datasets used here (HydroLAKES, GLOBathy, DAHITI and ERA5).
+the open datasets used here (HydroLAKES, GLOBathy, DAHITI and ERA5). This work was carried
+out in the context of the AINature project (Interreg) and the AQUAMON project (Horizon
+Europe), which provided the broader research environment within which it developed. The
+authors received no direct funding from either project for the work reported here.
 
 ## References
 
