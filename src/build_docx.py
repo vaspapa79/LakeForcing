@@ -59,9 +59,11 @@ FIGS = {
         "Physical consistency of the demonstration: 36 h mean drift versus "
         "(a) approximate mean depth and (b) maximum surface current. With only "
         "twelve lakes these are rank tendencies, not fits: the drift correlates "
-        "negatively with depth (Spearman ρ = −0.53, p ≈ 0.08) and weakly positively "
-        "with area and fetch, none significant at n = 12, so transport is governed "
-        "by fetch and wind exposure rather than peak current alone."),
+        "negatively with depth (Spearman ρ = −0.55 for mean depth and −0.57 for "
+        "maximum depth, p ≈ 0.05–0.06) and positively with surface area "
+        "(ρ = +0.63, p = 0.03) and fetch (ρ = +0.57). Only the area correlation is "
+        "significant at n = 12, so transport is read as governed by basin size, "
+        "fetch and wind exposure rather than peak current alone."),
     "validation": (ROOT / "docs/figure_validation.png", 8,
         "Benchmark of the auto-generated closed-lake configuration against the "
         "peer-reviewed, expert-built Polyfytos model on the shared grid (48 h mean "

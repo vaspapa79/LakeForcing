@@ -29,7 +29,10 @@ open data and a twelfth reusing an expert-built model as an export-path control,
 through the same unmodified code. The simulated 36-h surface transport spans an order of
 magnitude and varies coherently with each lake's size, depth, fetch and wind exposure,
 establishing physical plausibility and internal consistency rather than in-situ validation.
-Against the expert-built reference the automated forcing reproduces surface temperature to
+The per-lake displacements are single-release values; a release-point ensemble confirms the
+cross-lake ranking is robust, while the magnitude in the smallest, most sheltered basins is
+seed-sensitive. Against the expert-built reference the automated forcing reproduces surface
+temperature to
 0.85 °C RMSE and current speed to 1.5 cm s⁻¹ (r = 0.80); against independent satellite
 lake-surface temperature for four further lakes it is correct in regime but runs cold during
 the July-2022 heatwave, bounding the cost of climatological initialisation. The toolchain and
@@ -151,8 +154,8 @@ transport forcing.
 |---|---|---|
 | Global ocean reanalyses (CMEMS) to OpenDrift | coverage ends at the coast | forcing for any lake from open data |
 | Hand-built per-lake hydrodynamic models | labour-intensive, non-reproducible | auto-generates the setup from open inputs |
-| 1-D vertical lake models (e.g. GLM) | no horizontal transport field | full 3-D currents + waves on a grid |
-| Site-specific transport frameworks (e.g. CaMPSim-3D) | configured per site and per engine | engine output exported to a generic CF reader |
+| 1-D vertical lake models (e.g., GLM) | no horizontal transport field | full 3-D currents + waves on a grid |
+| Site-specific transport frameworks (e.g., CaMPSim-3D) | configured per site and per engine | engine output exported to a generic CF reader |
 | OpenDrift native readers (ROMS, generic) | no Delft3D reader; σ-fields not ingestible | σ-to-z coupling bridges the gap |
 | GLOBathy / HydroLAKES | static bathymetry only | adds physics-based currents + waves |
 | Idealised / analytical lake flow | no data, no waves/Stokes, no heat | data-driven FLOW+WAVE + Stokes |
@@ -308,7 +311,7 @@ of physical defaults (Table 2), so the generator can assemble a complete, well-p
 configuration with no hand input. The momentum and continuity equations are integrated by
 Delft3D-FLOW (Lesser et al., 2004) under the shallow-water and Boussinesq approximations on
 the σ-grid, and the surface-wave field by the third-generation spectral model SWAN within
-Delft3D-WAVE (Booij et al., 1999); the two run on a shared grid, so no wave-to-flow grid
+Delft3D-WAVE (Booij et al., 1999); the two runs on a shared grid, so no wave-to-flow grid
 interpolation is required.
 
 The generator writes the FLOW master-definition file (`.mdf`) and its run configuration
@@ -377,8 +380,8 @@ still-water bed depth d, whose sum is the total column thickness H = ζ + d:
 
 [[EQ:sigmaz]]
 
-with σ_{k} = 0 at the free surface and σ_{k} = −1 at the bed. Each scalar and velocity field
-is then interpolated in the vertical — by piecewise-linear interpolation in depth — from
+with σ_{k} = 0 at the free surface and σ_{k} = −1 at the bed. The scalar and velocity fields
+are then interpolated in the vertical — by piecewise-linear interpolation in depth — from
 these reconstructed σ-centre depths onto the fixed z-level set {0, −1, −2, −3, −5, −7.5, −10,
 −15, −20, −30, −50} m. Two boundary treatments keep the result physically faithful: because
 the shallowest σ-centre lies a finite distance below the free surface, the interpolation is
@@ -387,10 +390,10 @@ always sample a valid velocity; and target levels lying below the local bed are 
 missing rather than extrapolated, so that no spurious sub-bed flow is introduced (Fig. 2).
 Because this target z-level set is identical for every lake, the *effective* vertical
 resolution is lake-dependent: a deep basin populates all eleven levels, whereas in the
-shallowest lakes (~6 m, e.g. Poyang and the Sea of Galilee) only the upper four to five
+shallowest lakes (~6 m, e.g., Poyang and the Sea of Galilee) only the upper four to five
 levels lie above the bed and the rest are masked. A reader should therefore not assume all
 eleven levels are populated everywhere. The deepest level (−50 m) is, by design, shallower
-than the maximum depth of the deepest basins (e.g. Polyfytos, ~80 m): the z-set is
+than the maximum depth of the deepest basins (e.g., Polyfytos, ~80 m): the z-set is
 surface-focused because the tool targets near-surface, floating-material transport, so the
 weakly sheared structure below 50 m is intentionally not exported and is straightforward to
 extend if a deeper application requires it. Figure 3 shows the depth-resolved result for one
@@ -430,7 +433,7 @@ against the integrable singularity where the interpolated period tends to zero a
 wet/dry boundary — by imposing a minimum-period floor and a physical magnitude cap — and is
 finally projected onto eastward/northward components using the mean wave direction. The
 deep-water dispersion relation k = ω²/g assumes depth greater than about half the wavelength;
-for the short wind-sea periods of the shallowest basins (~6 m, e.g. Poyang and the Sea of
+for the short wind-sea periods of the shallowest basins (~6 m, e.g., Poyang and the Sea of
 Galilee) the dominant waves are in intermediate-to-shallow water, so this approximation
 degrades and bounds the Stokes magnitude there — a sensitivity that, as crossing-sea studies
 show, materially affects near-shore particle transport (Espenes et al., 2024). Substituting
@@ -473,7 +476,7 @@ their trajectories with OpenDrift (Dagestad et al., 2018) on the CF-NetCDF produ
 Section 2.5. Two configuration changes adapt the otherwise ocean-oriented tracker to an
 inland basin. First, OpenDrift's default global coastline landmask is disabled: built for
 the marine domain, it classifies the entire lake interior as land and would deactivate
-every particle at the first time step. Second, a constant all-water landmask is substituted
+every particle at the first-time step. Second, a constant all-water landmask is substituted
 in its place, so that stranding is governed solely by the data coverage of the forcing
 itself — a particle is deactivated only when it leaves the wet region defined by the
 exported fields, which is the physically correct shoreline for the modelled lake.
@@ -612,24 +615,27 @@ but covering this range with identical code is the property under test.
 
 **Table 3.** The twelve demonstration lakes and key model outputs. Regulation is the single
 natural/reservoir axis; morphology is conveyed by the depth columns. |U|_{max} = maximum
-surface current speed; H_{s,max} = maximum significant wave height. The two drift columns are
-the 36 h mean net particle displacement for the buoyant current+Stokes case and for the
-floating-litter case with 2 % windage added (Section 5.2).
+surface current speed; H_{s,max} = maximum significant wave height. The drift columns give the
+36 h mean net particle displacement: the single-release current+Stokes case, the median of a
+five-point release-point ensemble (Section 5.3), and the floating-litter case with 2 % windage
+added (Section 5.2). Comparing the ensemble median with the single-release value shows that the
+cross-lake ranking is robust (Spearman ρ = 0.74) while individual magnitudes are seed-sensitive,
+most strongly in basins with sheltered arms (Lagdo, Rotsee, Erken).
 
-| Lake | Country | Regulation | Lat | Max depth (m) | Mean depth (m) | \|U\|_{max} (m/s) | H_{s,max} (m) | Drift, current+Stokes (m) | Drift, +windage (m) |
-|---|---|---|--:|--:|--:|--:|--:|--:|--:|
-| Lagdo | Cameroon | reservoir | 8.8 | ~9 | 4.5 | 0.030 | 0.39 | 2439 | 1970 |
-| Bornos | Spain | reservoir | 36.8 | ~20 | 8.0 | 0.028 | 0.21 | 1337 | 5166 |
-| Mead | USA | reservoir | 36.3 | ~40 | 20.0 | 0.049 | 0.51 | 2933 | 8315 |
-| Polyfytos* | Greece | reservoir | 40.2 | ~80 | 30.0 | 1.18 | 0.32 | 1743 | 5874 |
-| Trasimeno | Italy | natural | 43.1 | ~7 | 4.7 | 0.012 | 0.33 | 3419 | 2047 |
-| Balaton | Hungary | natural | 46.9 | ~9 | 3.2 | 0.005 | 0.36 | 3250 | 4854 |
-| Rotsee | Switzerland | natural | 47.1 | ~16 | 9.0 | 0.018 | 0.14 | 341 | 819 |
-| Erken | Sweden | natural | 59.8 | ~20 | 9.0 | 0.010 | 0.20 | 2033 | 3771 |
-| Poyang | China | natural | 29.1 | ~6 | 3.0 | 0.020 | 0.41 | 3695 | 11179 |
-| Sea of Galilee | Israel | natural | 32.8 | ~6† | 3.0 | 0.032 | 0.34 | 3506 | 1102 |
-| Eucumbene | Australia | reservoir | −36.1 | ~38 | 18.0 | 0.052 | 0.33 | 3166 | 9189 |
-| Nova Ponte | Brazil | reservoir | −19.1 | ~23 | 11.0 | 0.030 | 0.41 | 2881 | 8803 |
+| Lake | Country | Regulation | Lat | Max depth (m) | Mean depth (m) | \|U\|_{max} (m/s) | H_{s,max} (m) | Drift, current+Stokes (m) | Drift, ensemble median (m) | Drift, +windage (m) |
+|---|---|---|--:|--:|--:|--:|--:|--:|--:|--:|
+| Lagdo | Cameroon | reservoir | 8.8 | ~9 | 4.5 | 0.030 | 0.39 | 2439 | 850 | 1970 |
+| Bornos | Spain | reservoir | 36.8 | ~20 | 8.0 | 0.028 | 0.21 | 1337 | 2520 | 5166 |
+| Mead | USA | reservoir | 36.3 | ~40 | 20.0 | 0.049 | 0.51 | 2933 | 3220 | 8315 |
+| Polyfytos* | Greece | reservoir | 40.2 | ~80 | 30.0 | 1.18 | 0.32 | 1743 | 2560 | 5874 |
+| Trasimeno | Italy | natural | 43.1 | ~7 | 4.7 | 0.012 | 0.33 | 3419 | 3320 | 2047 |
+| Balaton | Hungary | natural | 46.9 | ~9 | 3.2 | 0.005 | 0.36 | 3250 | 2950 | 4854 |
+| Rotsee | Switzerland | natural | 47.1 | ~16 | 9.0 | 0.018 | 0.14 | 341 | 260 | 819 |
+| Erken | Sweden | natural | 59.8 | ~20 | 9.0 | 0.010 | 0.20 | 2033 | 230 | 3771 |
+| Poyang | China | natural | 29.1 | ~6 | 3.0 | 0.020 | 0.41 | 3695 | 3360 | 11179 |
+| Sea of Galilee | Israel | natural | 32.8 | ~6† | 3.0 | 0.032 | 0.34 | 3506 | 3480 | 1102 |
+| Eucumbene | Australia | reservoir | −36.1 | ~38 | 18.0 | 0.052 | 0.33 | 3166 | 3440 | 9189 |
+| Nova Ponte | Brazil | reservoir | −19.1 | ~23 | 11.0 | 0.030 | 0.41 | 2881 | 3470 | 8803 |
 
 \*Polyfytos reuses a hand-built model that includes river discharges, hence its larger
 peak currents; the other eleven are auto-generated closed-lake setups. †For Sea of
@@ -744,8 +750,8 @@ the wind opposes the current and Stokes drift (Sea of Galilee 3.5 to 1.1 km, Tra
 3.4 to 2.0 km). Windage therefore typically dominates the net displacement of floating
 material — as it does in marine-debris studies (Chenillat et al., 2021; Iskandar et al.,
 2022) — while the current and Stokes fields set the
-lake-specific spatial structure of the trajectories. Reporting both cases makes the relative
-roles explicit and exercises every exported field (currents, Stokes drift and wind).
+lake-specific spatial structure of the trajectories. Reporting both cases make the relative
+roles explicit and exercise every exported field (currents, Stokes drift and wind).
 
 [[FIG:demonstration]]
 
@@ -779,9 +785,11 @@ five independent interior points and recomputing the 36 h drift. The cross-lake 
 robustly preserved: the primary seeding and the ensemble median order the twelve lakes almost
 identically (Spearman ρ = 0.74, p = 0.006), and the order-of-magnitude spread is reproduced.
 Within a lake, the drift varies by a median inter-quartile range of about 19 % of the median
-across release points, but markedly more in the smallest, most sheltered basins (Rotsee,
-Erken), where some interior points fall in near-stagnant water — Erken's ensemble-median
-drift (~0.2 km) is an order of magnitude below the value at its primary seed (~2.0 km). The
+across release points, but markedly more in basins with sheltered arms or sub-basins (Lagdo,
+Rotsee, Erken), where some interior points fall in near-stagnant water — Erken's
+ensemble-median drift (~0.2 km) is an order of magnitude below the value at its primary seed
+(~2.0 km), and these per-lake ensemble medians are reported alongside the single-release
+values in Table 3. The
 single-release demonstration should therefore be read as illustrative of the forcing's
 capability rather than as a converged, ensemble transport estimate (Section 6).
 
@@ -810,7 +818,7 @@ generality claim; it is left to future work (Section 6).
 ### 5.5 Relation to existing tools
 
 It is worth stating precisely what is, and is not, new here. Relative to hand-built,
-single-lake Delft3D studies (e.g. Papaioannou et al., 2025) and to inter-model comparisons
+single-lake Delft3D studies (e.g., Papaioannou et al., 2025) and to inter-model comparisons
 of lake hydrodynamics (Ishikawa et al., 2022), the contribution is not a new hydrodynamic
 solver but the automation and coupling that turn a community-validated 3-D engine into a
 forcing generator for a generic particle tracker. Relative to site-specific
@@ -850,18 +858,20 @@ expert construction and the calibration just described, not on its publication v
 shared, the 48 h mean surface fields agree closely: surface temperature is reproduced to an
 RMSE of 0.85 °C (bias +0.30 °C), and the surface-current speed to an RMSE of 1.5 cm s⁻¹ with
 a Pearson correlation of r = 0.80. The current *direction*, by contrast, agrees poorly
-(complex vector correlation |ρ| = 0.10): the hand-built circulation is organised by the
-river inflow, which the closed-lake default deliberately omits, so the auto configuration
-recovers the wind- and heat-driven structure and the current magnitude but not the
-river-forced directional jet. This is the expected, honest outcome — it confirms that the
-automated forcing reproduces the thermal field and current magnitude of a validated model,
-and it cleanly isolates the single process (river discharge) that a closed-lake setup cannot
-capture but that the pipeline supports as an optional boundary condition. We are therefore
+(complex vector correlation |ρ| = 0.10). The two configurations share the grid and the
+meteorological forcing but differ in several respects — the hand-built model includes the
+reservoir's river discharges and salinity transport in a calibrated, site-specific setup,
+whereas the auto configuration applies only the standard closed-lake defaults (Table 2) — and
+the detailed surface circulation of a deep stratifying basin is sensitive to such differences.
+The benchmark therefore confirms that the automated forcing reproduces the thermal field and
+the current magnitude of an expert-built model, while the directional field, which depends on
+the full model configuration, is not reproduced by the standard closed-lake default. We are therefore
 explicit about what this benchmark does and does not establish: it validates the
 auto-generated *thermal field* and current *magnitude* against an expert-built reference, but
 it does not validate the current *direction* of the closed-lake configuration, because the
-only directional reference available here is set by the river inflow that the closed-lake
-default omits. The satellite comparison of Section 5.7 likewise constrains the thermal field
+only directional reference available here is itself shaped by the calibrated, site-specific
+setup of the hand-built model — its river discharges, salinity transport and closure choices —
+which the standard defaults do not replicate. The satellite comparison of Section 5.7 likewise constrains the thermal field
 rather than the currents. Independent validation of current direction — the quantity that
 most directly governs where particles go — against in-situ drifters or ADCP moorings is thus
 the single most valuable next step, and is enabled by releasing the forcing openly. The
@@ -907,7 +917,7 @@ is reproduced almost exactly. The agreement at the control lake therefore indica
 exported temperatures are physically correct in regime and that the warm-lake offset is an
 initialisation cost, not a forcing error; it quantifies, in observational terms, the
 basin-mean dependence on the initial temperature noted in Section 4.2 and motivates
-initialising from an observed (e.g. satellite) temperature, which the pipeline supports. The
+initialising from an observed (e.g., satellite) temperature, which the pipeline supports. The
 test constrains the basin mean rather than the fine spatial structure: because each lake is
 driven by a single, spatially uniform ERA5 column, the modelled surface temperature is nearly
 uniform over the basin (spatial standard deviation 0.0–0.6 °C versus 1.2–4.0 °C in the
@@ -973,9 +983,16 @@ climatological monthly value and integrated for only 48 h, so during an anomalou
 period — such as the July-2022 heatwave that coincided with the simulation window — the
 modelled surface runs several degrees cold of the observed skin temperature, even though the
 heat-flux forcing itself is sound (the Southern-Hemisphere winter control lake, with no
-anomaly, matches the satellite to better than 1 °C). Initialising from an observed (e.g.
+anomaly, matches the satellite to better than 1 °C). Initialising from an observed (e.g.,
 satellite) surface temperature, and extending the integration, would remove this bias and is
-a small change within the existing interface.
+a small change within the existing interface. This thermal offset is not expected to
+propagate appreciably into the reported 36-h surface transport: the demonstration shift is a
+wind- and wave-driven near-surface response, and over the short integration the weak, slowly
+developing summer stratification exerts only a second-order influence on the surface current,
+so a several-degree error in the absolute surface temperature leaves the surface drift largely
+unchanged. Quantifying this insensitivity directly — by re-running an affected summer lake
+from an observed initial temperature and reporting the resulting change in 36-h drift — would
+place a firm bound on it and is left to future work.
 
 Together these limitations define a clear development path. Future work will introduce
 spatially distributed wind for large lakes, time-varying wave forcing, observed-temperature
