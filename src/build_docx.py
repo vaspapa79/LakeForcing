@@ -308,8 +308,8 @@ def add_hyperlink(paragraph, url, text):
 
 
 def emit_reference(doc, text):
-    """One reference: left-aligned hanging indent; DOI URL as a live hyperlink."""
-    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    """One reference: justified, hanging indent; DOI URL as a live hyperlink."""
+    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     pf = p.paragraph_format
     pf.left_indent = Inches(0.3); pf.first_line_indent = Inches(-0.3)
     pf.space_after = Pt(4)
