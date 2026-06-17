@@ -9,26 +9,18 @@ Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzid
 ---
 
 ## Abstract
-Lagrangian particle tracking is a standard tool for studying the transport of floating
-material — plastics, oil, harmful-algal-bloom cells, fish larvae — yet its use in inland lakes
-is blocked by the absence of ready-made forcing: global ocean reanalyses stop at the coast,
-and lake hydrodynamic models are built by hand, one waterbody at a time. We present
-LakeForcing-OpenDrift, an open, reproducible Python pipeline that assembles bathymetry and
-meteorology from open global sources, automatically configures and runs a coupled Delft3D-FLOW
-+ Delft3D-WAVE (SWAN) simulation for an arbitrary lake, and exports CF-compliant NetCDF that
-drives the OpenDrift particle tracker without modification. Its methodological core is a fully
-specified σ-to-z reconstruction that, with the curvilinear-to-geographic velocity rotation and
-a surface Stokes-drift derivation, renders terrain-following lake hydrodynamics ingestible by a
-generic ocean tracker. We demonstrate the pipeline, unchanged, on twelve lakes spanning all
-inhabited continents (36°S–60°N) — eleven auto-configured from open data and a twelfth reusing
-an expert-built model as a control. The simulated 36-h surface transport spans an order of
-magnitude and varies coherently with each lake's size, depth, fetch and wind exposure; a
-release-point ensemble confirms the cross-lake ranking is robust. Against the expert-built
-reference the forcing reproduces surface temperature to 0.85 °C RMSE and current speed to
-1.5 cm s⁻¹ (r = 0.80), and against satellite lake-surface temperature it is correct in regime
-but runs cold under climatological initialisation. The toolchain and the twelve-lake forcing
-dataset are released under permissive licences, removing the forcing bottleneck for lake-scale
-transport studies.
+Lagrangian particle tracking is a standard tool for transport of floating material
+(plastics, oil, harmful-algal-bloom cells, fish larvae), yet in inland lakes its use is blocked
+by the absence of ready-made forcing: ocean reanalyses stop at the coast, and lake models are
+built by hand. We present LakeForcing-OpenDrift, an open, reproducible Python pipeline that
+assembles bathymetry and meteorology from open data, automatically runs a coupled
+Delft3D-FLOW/WAVE (SWAN) simulation for any lake, and exports CF-compliant NetCDF that drives
+the OpenDrift tracker without modification. Its core is a σ-to-z reconstruction, with velocity
+rotation and a surface Stokes-drift derivation, that makes terrain-following hydrodynamics
+ingestible by a generic tracker. We demonstrate it, unchanged, on twelve lakes spanning all
+inhabited continents (36°S–60°N). Against an expert-built reference it reproduces surface
+temperature to 0.85 °C RMSE and current speed to 1.5 cm s⁻¹. The toolchain and twelve-lake
+dataset are released openly.
 
 **Keywords:** Lake hydrodynamics; Wind-wave modelling (SWAN); Sigma-to-z coupling;
 OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
