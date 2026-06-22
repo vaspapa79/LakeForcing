@@ -33,9 +33,8 @@ def add_hyperlink(paragraph, url, text, size_hp="22"):
     t = OxmlElement("w:t"); t.text = text; t.set(qn("xml:space"), "preserve")
     run.append(t); hl.append(run); paragraph._p.append(hl)
 
-TITLE = ("LakeForcing-OpenDrift: an open, reproducible pipeline for generating "
-         "hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian "
-         "transport models")
+TITLE = ("LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for "
+         "OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake")
 
 HIGHLIGHTS = [
     "Open pipeline turns global open data into transport forcing for any inland lake",

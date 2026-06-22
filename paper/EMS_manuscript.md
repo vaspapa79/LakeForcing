@@ -1,4 +1,4 @@
-# LakeForcing-OpenDrift: an open, reproducible pipeline for generating hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models
+# LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake
 
 Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzidou^1, Ilias Gialampoukidis^1, Stefanos Vrochidis^1, Ioannis Kompatsiaris^1
 
@@ -15,12 +15,12 @@ by the absence of ready-made forcing: ocean reanalyses stop at the coast, and la
 built by hand. We present LakeForcing-OpenDrift, an open, reproducible Python pipeline that
 assembles bathymetry and meteorology from open data, automatically runs a coupled
 Delft3D-FLOW/WAVE (SWAN) simulation for any lake, and exports CF-compliant NetCDF that drives
-the OpenDrift tracker without modification. Its core is a σ-to-z reconstruction, with velocity
-rotation and a surface Stokes-drift derivation, that makes terrain-following hydrodynamics
-ingestible by a generic tracker. We demonstrate it, unchanged, on twelve lakes spanning all
-inhabited continents (36°S–60°N). Against an expert-built reference it reproduces surface
-temperature to 0.85 °C RMSE and current speed to 1.5 cm s⁻¹. The toolchain and twelve-lake
-dataset are released openly.
+the OpenDrift tracker unmodified. The computational core is a σ-to-z coupling algorithm,
+mapping terrain-following σ-layer fields to fixed z-levels with per-cell velocity rotation and
+a surface Stokes-drift derivation, that makes a hydrodynamic engine interoperable with a
+generic tracker. We demonstrate it, unchanged, on twelve lakes (36°S–60°N); against an
+expert-built reference it reproduces surface temperature to 0.85 °C RMSE and current speed to
+1.5 cm s⁻¹. Toolchain and dataset are released openly.
 
 **Keywords:** Lake hydrodynamics; Wind-wave modelling (SWAN); Sigma-to-z coupling;
 OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
@@ -127,14 +127,21 @@ transport forcing.
 | GLOBathy / HydroLAKES | static bathymetry only | adds physics-based currents + waves |
 | Idealised / analytical lake flow | no data, no waves/Stokes, no heat | data-driven FLOW+WAVE + Stokes |
 
-The specific contributions of this work are: (i) an open, end-to-end pipeline from open
-global data to OpenDrift-ready lake forcing; (ii) the automated, engine-to-tracker coupling
-that makes terrain-following Delft3D output usable by a generic CF reader — within which a
-carefully handled σ-to-z reconstruction carries currents, temperature, water level and the
-wave-driven Stokes drift as a component rather than the headline; (iii) automated generation
-of closed-lake Delft3D models from open inputs; and (iv) a demonstration of generality
-across twelve morphologically and climatically diverse lakes spanning all inhabited
-continents, processed by identical code. The remainder of the paper
+The specific contributions are twofold. The computational contribution is a σ-to-z coupling
+algorithm and the automated, lake-agnostic engine-to-tracker framework built around it: a
+fully specified reconstruction that maps Delft3D's terrain-following σ-layer currents,
+temperature and water level onto fixed metric z-levels — with the per-cell
+curvilinear-to-geographic velocity rotation, horizontal regridding and surface Stokes-drift
+derivation needed to render that output readable by a generic CF reader — together with the
+automated generation of closed-lake Delft3D models from open inputs that lets the whole chain
+run for an arbitrary lake without manual setup. The geoscientific contribution is to remove
+the forcing bottleneck that has kept Lagrangian transport modelling — of plastics, oil,
+harmful algal blooms and ecological dispersal — out of reach for most of the world's inland
+waters, demonstrated by applying one unmodified toolchain to twelve morphologically and
+climatically diverse lakes on all inhabited continents. The two are inseparable: the algorithm
+is what makes the geoscientific capability general and reproducible rather than a per-lake,
+hand-built exercise. This is thus a scientific-computing contribution — a reusable algorithm
+and open framework — rather than a site-specific application or a software-deployment study. The remainder of the paper
 is organised as follows: Section 2 develops the theory and governing equations of the
 coupling; Section 3 describes the software architecture and modules; Section 4 details the
 illustrative application and its physical configuration; Section 5 presents and discusses
@@ -394,7 +401,7 @@ Stokes-drift magnitude (consistent with Breivik et al., 2014; van den Bremer and
 evaluated through the peak radian frequency ω = 2π/T_{p}, the deep-water wavenumber
 k = ω²/g and the characteristic wave amplitude a = H_{s}/(2√2) — the amplitude of the
 monochromatic wave whose energy equals that of a sea state of significant height H_{s},
-chosen so that the surface-elevation variance σ_η² = a²/2 = H_{s}²/8 is preserved rather
+chosen so that the surface-elevation variance σ_{η}² = a²/2 = H_{s}²/8 is preserved rather
 than set ad hoc. The estimate is guarded
 against the integrable singularity where the interpolated period tends to zero at the
 wet/dry boundary — by imposing a minimum-period floor and a physical magnitude cap — and is

@@ -143,9 +143,9 @@ def add_runs(par, text):
 
 def front_matter(doc):
     t = doc.add_paragraph(); t.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = t.add_run("LakeForcing-OpenDrift: an open, reproducible pipeline for "
-                  "generating hydrodynamic and wind-wave forcing of inland lakes "
-                  "to drive Lagrangian transport models")
+    r = t.add_run("LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open "
+                  "pipeline for OpenDrift-ready hydrodynamic and wind-wave forcing "
+                  "of any inland lake")
     r.bold = True; r.font.size = Pt(16)
 
     authors = [("Vassilios Papaioannou", "1,*"), ("Christos G. E. Anagnostopoulos", "1"),
