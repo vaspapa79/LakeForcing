@@ -1,7 +1,7 @@
 """
 make_equations.py -- render the manuscript display equations as tight, high-DPI
 PNGs (matplotlib mathtext) for embedding in the .docx. One file per marker name
-used in paper/EMS_manuscript.md ([[EQ:name]]).
+used in paper/CAGEO_manuscript.md ([[EQ:name]]).
 
   python src/make_equations.py   ->  docs/eq/EQ_<name>.png
 """

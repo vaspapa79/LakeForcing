@@ -1,5 +1,5 @@
 """
-figure_demonstration.py -- EMS "demonstration across cases" figure: one panel per
+figure_demonstration.py -- the "demonstration across cases" figure: one panel per
 lake showing the surface current speed + 36 h particle trajectories, arranged along
 the diversity gradient. Reads output/<lake>_forcing.nc + <lake>_trajectory.nc.
 

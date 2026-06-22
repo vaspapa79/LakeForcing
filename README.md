@@ -12,7 +12,7 @@ terrain-following Delft3D output readable by OpenDrift's fixed-depth reader.
 > open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian
 > transport models"*
 > (target: **Computers & Geosciences**; a companion dataset descriptor for *Data in Brief*
-> is planned). Draft: `paper/EMS_manuscript.md`.
+> is planned). Draft: `paper/CAGEO_manuscript.md`.
 
 ## Why
 Global ocean reanalyses (CMEMS) stop at the coast, so lake-scale transport modelling
@@ -57,7 +57,7 @@ natural ↔ reservoir; two bathymetry sources), all through the same unmodified 
 results establish physical plausibility and internal consistency (plus a model-to-model
 benchmark and an independent satellite surface-temperature check), not per-lake validation
 against in-situ observations. See `output/figure_demonstration.png`,
-`paper/EMS_manuscript.md` Table 3, and `docs/figure_architecture.png`.
+`paper/CAGEO_manuscript.md` Table 3, and `docs/figure_architecture.png`.
 
 ## Requirements
 Python 3.11 (`requirements.txt`) + **Delft3D 4.07.01** (FLOW + WAVE/SWAN, installed
