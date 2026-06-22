@@ -1039,7 +1039,7 @@ steps.
 | | |
 |---|---|
 | Software name | LakeForcing |
-| Version | v1.1.1 |
+| Version | v1.2.0 |
 | Developers | V. Papaioannou, C. G. E. Anagnostopoulos, A. Moumtzidou, I. Gialampoukidis, S. Vrochidis, I. Kompatsiaris (CERTH-ITI) |
 | Contact | Vassilios Papaioannou — vaspapa@iti.gr; CERTH-ITI, 6th km Charilaou-Thermi, 57001 Thessaloniki, Greece |
 | Year first available | 2025 |

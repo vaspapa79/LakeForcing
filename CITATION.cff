@@ -30,8 +30,8 @@ authors:
     email: ikom@iti.gr
     affiliation: "Information Technologies Institute, CERTH, Thessaloniki, Greece"
 license: MIT
-version: 1.1.1
-date-released: "2026-06-12"
+version: 1.2.0
+date-released: "2026-06-22"
 repository-code: "https://github.com/vaspapa79/LakeForcing"
 url: "https://github.com/vaspapa79/LakeForcing"
 keywords:
