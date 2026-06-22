@@ -359,7 +359,7 @@ def main():
         title=f"{args.lake}: hydrodynamic + wave forcing for OpenDrift",
         source="Delft3D-FLOW + Delft3D-WAVE (SWAN); sigma->z regridded",
         Conventions="CF-1.8",
-        institution="LakeForcing-OpenDrift dataset",
+        institution="LakeForcing dataset",
     )
     write_cf(Path(args.out), f["time"], glon, glat, Z_LEVELS, data2d, data3d, attrs)
 

@@ -1,5 +1,5 @@
 """
-make_graphical_abstract.py -- Elsevier graphical abstract for LakeForcing-OpenDrift.
+make_graphical_abstract.py -- Elsevier graphical abstract for LakeForcing.
 Plate-assembled from the paper's own data: stage 1 is the global lake map (real
 paper figure); stages 2-4 are clean single panels rendered directly from the
 released forcing/trajectory NetCDFs (no titles, colorbars or neighbouring panels
@@ -105,7 +105,7 @@ STAGES = [
 def main():
     fig = plt.figure(figsize=(FIGW, FIGH))
     bg = fig.add_axes([0, 0, 1, 1]); bg.set_xlim(0, 1); bg.set_ylim(0, 1); bg.axis("off")
-    bg.text(0.5, 0.955, "LakeForcing-OpenDrift: from open data to lake transport "
+    bg.text(0.5, 0.955, "LakeForcing: from open data to lake transport "
             "forcing", ha="center", va="center", fontsize=14.5, fontweight="bold",
             color="#15233a")
 

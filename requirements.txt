@@ -1,4 +1,4 @@
-# LakeForcing-OpenDrift -- Python dependencies (conda-forge recommended).
+# LakeForcing -- Python dependencies (conda-forge recommended).
 # Tested in a Python 3.11 environment alongside Delft3D 4.07.01 (FLOW + WAVE/SWAN),
 # which is installed separately (https://oss.deltares.nl/web/delft3d).
 opendrift==1.14.9

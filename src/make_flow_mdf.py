@@ -62,7 +62,7 @@ def build_mdf(prefix, M, N, K, lat, itdate, tstop, dt, tzone, t0, secchi):
     layers = lambda v: col([v] * K)
     txt = f"""Ident  = #Delft3D-FLOW 3.59.01.57433#
 Commnt =
-Runtxt = #LakeForcing-OpenDrift closed-lake scenario#
+Runtxt = #LakeForcing closed-lake scenario#
          #{prefix}#
 Filcco = #{prefix}.grd#
 Anglat =  {e3(lat)}

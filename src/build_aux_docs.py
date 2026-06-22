@@ -33,7 +33,7 @@ def add_hyperlink(paragraph, url, text, size_hp="22"):
     t = OxmlElement("w:t"); t.text = text; t.set(qn("xml:space"), "preserve")
     run.append(t); hl.append(run); paragraph._p.append(hl)
 
-TITLE = ("LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for "
+TITLE = ("LakeForcing: a σ-to-z coupling algorithm and open pipeline for "
          "hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian "
          "transport models")
 
@@ -103,7 +103,7 @@ def build_cover_letter():
          "show that lakes and reservoirs are among the most acutely plastic-polluted "
          "freshwater systems on Earth.")
 
-    para("Our manuscript presents LakeForcing-OpenDrift, an open and reproducible "
+    para("Our manuscript presents LakeForcing, an open and reproducible "
          "Python pipeline that assembles bathymetry and meteorology from open "
          "global datasets, automatically configures and runs a coupled "
          "Delft3D-FLOW + Delft3D-WAVE (SWAN) simulation for an arbitrary lake, and "
@@ -140,7 +140,7 @@ def build_cover_letter():
          "from funding agencies in the public, commercial, or not-for-profit sectors; "
          "the work was carried out using the existing research infrastructure of "
          "CERTH-ITI. The source code is openly available at "
-         "https://github.com/vaspapa79/LakeForcing-OpenDrift and archived on Zenodo "
+         "https://github.com/vaspapa79/LakeForcing and archived on Zenodo "
          "(concept DOI: https://doi.org/10.5281/zenodo.20627160); the generated "
          "twelve-lake forcing dataset is distributed as release assets of the same archive.")
 

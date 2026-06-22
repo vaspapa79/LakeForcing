@@ -1,4 +1,4 @@
-# LakeForcing-OpenDrift
+# LakeForcing
 
 **An open pipeline that turns open global data into hydrodynamic + wind-wave forcing
 for *any* inland lake, to drive [OpenDrift](https://opendrift.github.io/) Lagrangian
@@ -8,7 +8,7 @@ Built with **Delft3D-FLOW + Delft3D-WAVE** and exported as **CF-compliant NetCDF
 The methodological core is the **σ-layer → z-level coupling** that makes
 terrain-following Delft3D output readable by OpenDrift's fixed-depth reader.
 
-> Companion code for the manuscript *"LakeForcing-OpenDrift: a σ-to-z coupling algorithm and
+> Companion code for the manuscript *"LakeForcing: a σ-to-z coupling algorithm and
 > open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian
 > transport models"*
 > (target: **Computers & Geosciences**; a companion dataset descriptor for *Data in Brief*

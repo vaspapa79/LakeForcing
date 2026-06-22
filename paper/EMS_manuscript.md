@@ -1,4 +1,4 @@
-# LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models
+# LakeForcing: a σ-to-z coupling algorithm and open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models
 
 Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzidou^1, Ilias Gialampoukidis^1, Stefanos Vrochidis^1, Ioannis Kompatsiaris^1
 
@@ -12,7 +12,7 @@ Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzid
 Lagrangian particle tracking is a standard tool for transport of floating material
 (plastics, oil, harmful-algal-bloom cells, fish larvae), yet in inland lakes its use is blocked
 by the absence of ready-made forcing: ocean reanalyses stop at the coast, and lake models are
-built by hand. We present LakeForcing-OpenDrift, an open, reproducible Python pipeline that
+built by hand. We present LakeForcing, an open, reproducible Python pipeline that
 assembles bathymetry and meteorology from open data, automatically runs a coupled
 Delft3D-FLOW/WAVE (SWAN) simulation for any lake, and exports CF-compliant NetCDF that drives
 Lagrangian particle trackers unmodified. The computational core is a σ-to-z coupling algorithm,
@@ -797,7 +797,7 @@ of lake hydrodynamics (Ishikawa et al., 2022), the contribution is not a new hyd
 solver but the automation and coupling that turn a community-validated 3-D engine into a
 forcing generator for a generic particle tracker. Relative to site-specific
 transport frameworks such as CaMPSim-3D (Pilechi et al., 2022), which couple a particle
-model to one particular hydrodynamic engine on a per-study basis, LakeForcing-OpenDrift
+model to one particular hydrodynamic engine on a per-study basis, LakeForcing
 instead targets a generic CF reader: the same exported forcing can drive OpenDrift or
 Parcels (Delandmeter and van Sebille, 2019) without change, and the same workflow applies
 to any lake. We note that this Parcels compatibility follows by construction from the shared
@@ -988,7 +988,7 @@ openly distributed archive of lake forcing for community reuse.
 
 ## 7. Conclusions
 
-We have presented LakeForcing-OpenDrift, an open and reproducible pipeline that converts
+We have presented LakeForcing, an open and reproducible pipeline that converts
 open global data — HydroLAKES, GLOBathy and DAHITI bathymetry together with ERA5
 meteorology — into hydrodynamic and wind-wave forcing for an arbitrary inland lake, and
 delivers it as CF-compliant NetCDF that drives the OpenDrift particle tracker without
@@ -1038,7 +1038,7 @@ steps.
 
 | | |
 |---|---|
-| Software name | LakeForcing-OpenDrift |
+| Software name | LakeForcing |
 | Version | v1.1.1 |
 | Developers | V. Papaioannou, C. G. E. Anagnostopoulos, A. Moumtzidou, I. Gialampoukidis, S. Vrochidis, I. Kompatsiaris (CERTH-ITI) |
 | Contact | Vassilios Papaioannou — vaspapa@iti.gr; CERTH-ITI, 6th km Charilaou-Thermi, 57001 Thessaloniki, Greece |
@@ -1052,7 +1052,7 @@ steps.
 | Source-code size | approximately 0.2 MB (excluding generated data) |
 | Code versioning system | git |
 | Documentation | Repository README and the present manuscript |
-| Source repository | https://github.com/vaspapa79/LakeForcing-OpenDrift |
+| Source repository | https://github.com/vaspapa79/LakeForcing |
 | Permanent archive | Zenodo (concept DOI, latest version): https://doi.org/10.5281/zenodo.20627160 |
 | Reproducible test capsule | A small Delft3D sample in `tests/fixtures/` runs the σ-to-z exporter via `pytest` and GitHub-Actions CI with no Delft3D install; full hydrodynamic runs require the external engine |
 | Licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
@@ -1069,7 +1069,7 @@ The authors declare that they have no known competing financial interests or per
 relationships that could have appeared to influence the work reported in this paper.
 
 ## Data availability
-The source code is openly available at https://github.com/vaspapa79/LakeForcing-OpenDrift
+The source code is openly available at https://github.com/vaspapa79/LakeForcing
 under the MIT licence and is archived on Zenodo at https://doi.org/10.5281/zenodo.20627160.
 The generated twelve-lake forcing dataset (CC-BY-4.0) and the full reproducibility data are
 distributed as release assets of the same repository. All input datasets (HydroLAKES,

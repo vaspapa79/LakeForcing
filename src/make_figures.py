@@ -85,7 +85,7 @@ def fig_architecture():
             ax.text(cx, y - 3.1, sub, ha="center", va="top", fontsize=10,
                     style="italic", color="#555", zorder=6)
 
-    ax.text(66, 54.8, "The LakeForcing-OpenDrift pipeline", ha="center",
+    ax.text(66, 54.8, "The LakeForcing pipeline", ha="center",
             fontsize=21, fontweight="bold", zorder=6)
 
     # ----- panels (tight gaps) -----

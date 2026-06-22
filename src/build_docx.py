@@ -29,7 +29,7 @@ CODE = RGBColor(0x33, 0x33, 0x33)
 
 FIGS = {
     "architecture": (ROOT / "docs/figure_architecture.png", 1,
-        "Architecture of the LakeForcing-OpenDrift pipeline: single-purpose, "
+        "Architecture of the LakeForcing pipeline: single-purpose, "
         "file-coupled modules transform open global data into OpenDrift-ready "
         "CF-NetCDF; the σ-to-z coupling (cf_export.py) is the engine-to-tracker "
         "bridge."),
@@ -143,7 +143,7 @@ def add_runs(par, text):
 
 def front_matter(doc):
     t = doc.add_paragraph(); t.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = t.add_run("LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open "
+    r = t.add_run("LakeForcing: a σ-to-z coupling algorithm and open "
                   "pipeline for hydrodynamic and wind-wave forcing of inland lakes "
                   "to drive Lagrangian transport models")
     r.bold = True; r.font.size = Pt(16)
