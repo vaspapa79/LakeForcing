@@ -16,7 +16,7 @@ Authors.docx
 # Internal review copies (not for the public repo)
 paper/*_ca_review*.docx
 # Transient build fallback when the main docx is open/locked in Word
-paper/CAGEO_manuscript_uplift.docx
+paper/CAGEO_manuscript_VP_uplift.docx
 *.cdsapirc
 *credentials*.json
 .env

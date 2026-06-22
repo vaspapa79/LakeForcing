@@ -1059,10 +1059,10 @@ steps.
 | Availability and cost | Free and open source |
 
 ## CRediT authorship contribution statement
-**V.P.:** Conceptualization, Methodology, Software, Validation, Writing – original draft.
-**C.G.E.A.:** Software, Validation, Writing – review & editing. **A.M.:** Data curation,
+**V.P.:** Conceptualization, Methodology, Software, Validation, Visualization, Writing – original draft.
+**C.G.E.A.:** Software, Validation, Visualization, Writing – original draft. **A.M.:** Data curation,
 Writing – review & editing. **I.G.:** Methodology, Writing – review & editing. **S.V.:**
-Supervision, Writing – review & editing. **I.K.:** Supervision, Funding acquisition.
+Supervision, Writing – review & editing. **I.K.:** Supervision, Project administration, Funding acquisition.
 
 ## Declaration of competing interest
 The authors declare that they have no known competing financial interests or personal

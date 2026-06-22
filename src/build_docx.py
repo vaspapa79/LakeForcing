@@ -5,7 +5,7 @@ headings, inline bold/italic/code, bullet lists, both pipe tables, numbered
 display equations ([[EQ:name]] -> docs/eq/EQ_name.png) and the seven embedded,
 captioned figures ([[FIG:name]]).
 
-  python src/build_docx.py            ->  paper/CAGEO_manuscript.docx
+  python src/build_docx.py            ->  paper/CAGEO_manuscript_VP.docx
 """
 import re
 import sys
@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from omml_equations import oMath, EQ_NUM  # noqa: E402
 
 MD = ROOT / "paper" / "CAGEO_manuscript.md"
-DOCX = ROOT / "paper" / "CAGEO_manuscript.docx"
+DOCX = ROOT / "paper" / "CAGEO_manuscript_VP.docx"
 SERIF = "Times New Roman"
 CODE = RGBColor(0x33, 0x33, 0x33)
 
@@ -419,7 +419,7 @@ def main():
     try:
         doc.save(target)
     except PermissionError:
-        target = DOCX.with_name("CAGEO_manuscript_uplift.docx")
+        target = DOCX.with_name("CAGEO_manuscript_VP_uplift.docx")
         doc.save(target)
         print(f"NOTE: {DOCX.name} was locked (open in Word) -> saved to {target.name}")
     nf = sum(1 for l in body if l.strip().startswith("[[FIG:"))
