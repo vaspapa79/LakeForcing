@@ -10,9 +10,8 @@ terrain-following Delft3D output readable by OpenDrift's fixed-depth reader.
 
 > Companion code for the manuscript *"LakeForcing-OpenDrift: an open, reproducible pipeline
 > for generating hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian
-> transport models"* (target: **Environmental Modelling & Software**, Original Software
-> Publication; a companion dataset descriptor for *Data in Brief* is planned). Draft:
-> `paper/EMS_manuscript.md`.
+> transport models"* (target: **Computers & Geosciences**; a companion dataset
+> descriptor for *Data in Brief* is planned). Draft: `paper/EMS_manuscript.md`.
 
 ## Why
 Global ocean reanalyses (CMEMS) stop at the coast, so lake-scale transport modelling

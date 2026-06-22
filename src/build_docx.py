@@ -338,7 +338,7 @@ def main():
     for sec in doc.sections:
         sec.top_margin = Inches(0.6); sec.bottom_margin = Inches(0.6)
         sec.left_margin = Inches(0.65); sec.right_margin = Inches(0.65)
-        # continuous line numbers for peer review (Elsevier/EMS requirement)
+        # continuous line numbers for peer review (Elsevier requirement)
         sectPr = sec._sectPr
         ln = OxmlElement("w:lnNumType")
         ln.set(qn("w:countBy"), "1"); ln.set(qn("w:restart"), "continuous")

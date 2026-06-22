@@ -1,7 +1,7 @@
 """
-build_aux_docs.py -- create the EM&S submission companions:
+build_aux_docs.py -- create the Computers & Geosciences submission companions:
   paper/Highlights.docx   (3-5 bullets, each <= 85 characters)
-  paper/CoverLetter.docx  (addressed to the EM&S editor)
+  paper/CoverLetter.docx  (addressed to the Computers & Geosciences editor)
 
   python src/build_aux_docs.py
 """
@@ -86,15 +86,14 @@ def build_cover_letter():
                 r = p.add_run(part); r.bold = bold; r.italic = italic
         return p
 
-    para("16 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
-    para("To the Editors-in-Chief,\nEnvironmental Modelling & Software",
+    para("22 June 2026", align=WD_ALIGN_PARAGRAPH.LEFT, after=6)
+    para("To the Editors-in-Chief,\nComputers & Geosciences",
          align=WD_ALIGN_PARAGRAPH.LEFT, after=12)
 
     para("Dear Editors,", align=WD_ALIGN_PARAGRAPH.LEFT, after=10)
 
     para(f"We are pleased to submit our manuscript, “{TITLE}”, for "
-         "consideration in Environmental Modelling & Software as an original "
-         "software publication.")
+         "consideration in Computers & Geosciences.")
 
     para("Lagrangian particle tracking is a standard tool for studying the "
          "transport of floating material, but in inland lakes its use is blocked "
@@ -117,17 +116,22 @@ def build_cover_letter():
          "demonstrate the pipeline, unchanged, across twelve morphologically and "
          "climatically diverse lakes on all inhabited continents, from 36°S to 60°N.")
 
-    para("We believe the work fits the scope of Environmental Modelling & Software: "
-         "it is a reusable, openly released modelling tool with a clearly described "
-         "method, demonstrated generality, and full software and data availability. "
-         "It addresses a concrete and timely barrier to environmental transport "
-         "modelling in freshwater systems. The generality is supported by a model-to-model "
-         "benchmark against an expert-built reservoir model and by an independent comparison "
-         "of the exported surface temperature against satellite observations for four further "
-         "lakes. We note that the openly released twelve-lake forcing dataset could form the "
-         "basis of a companion data descriptor (e.g. in Data in Brief), which we would be "
-         "glad to prepare as a linked co-submission should the editors consider it "
-         "appropriate.")
+    para("We believe the work fits the scope of Computers & Geosciences as original "
+         "research at the interface of computational science and the geosciences: it "
+         "contributes a reusable algorithm and an openly released, reproducible software "
+         "pipeline — centred on a fully specified sigma-to-z coupling that bridges a "
+         "terrain-following hydrodynamic engine to a generic Lagrangian tracker — together "
+         "with a demonstration of its generality across twelve lakes and full software and "
+         "data availability. It addresses a concrete and timely computational barrier to "
+         "environmental transport modelling in freshwater systems. The generality is "
+         "supported by a model-to-model benchmark against an expert-built reservoir model "
+         "and by an independent comparison of the exported surface temperature against "
+         "satellite observations for four further lakes. The complete source code is "
+         "released under the MIT licence with a continuous-integration test capsule, and the "
+         "generated twelve-lake forcing dataset is openly archived, so that the reported "
+         "results are fully reproducible. We would also be glad to prepare a companion data "
+         "descriptor for the forcing dataset as a linked co-submission (e.g. in Data in "
+         "Brief) should the editors consider it appropriate.")
 
     para("This manuscript is original, has not been published previously, and is "
          "not under consideration for publication elsewhere. All authors have "
