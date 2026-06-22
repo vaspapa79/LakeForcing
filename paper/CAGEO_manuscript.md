@@ -1069,12 +1069,16 @@ The authors declare that they have no known competing financial interests or per
 relationships that could have appeared to influence the work reported in this paper.
 
 ## Data availability
-The source code is openly available at https://github.com/vaspapa79/LakeForcing
-under the MIT licence and is archived on Zenodo at https://doi.org/10.5281/zenodo.20627160.
 The generated twelve-lake forcing dataset (CC-BY-4.0) and the full reproducibility data are
-distributed as release assets of the same repository. All input datasets (HydroLAKES,
-GLOBathy, DAHITI, ERA5) are openly available from their respective
-providers.
+distributed as release assets of the GitHub repository and archived on Zenodo at
+https://doi.org/10.5281/zenodo.20627160. All input datasets (HydroLAKES, GLOBathy, DAHITI,
+ERA5) are openly available from their respective providers.
+
+## Code availability
+The source code is openly available at https://github.com/vaspapa79/LakeForcing under the
+MIT licence and is archived on Zenodo at https://doi.org/10.5281/zenodo.20627160. A
+continuous-integration test on a small bundled Delft3D fixture exercises the σ-to-z exporter
+from a clean checkout with no Delft3D installation.
 
 ## Funding
 This research did not receive any specific grant from funding agencies in the public,
