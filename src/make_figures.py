@@ -338,13 +338,13 @@ def fig_lake_map():
            "rotsee": (-34, 6), "erken": (6, 8), "poyang": (6, 6),
            "sea_of_galilee": (8, -10), "eucumbene": (6, -8),
            "nova_ponte": (-30, -6)}
-    dmax = max(d["drift"] for d in LAKES.values())
     for k, d in LAKES.items():
-        col = GREEN if d["type"] == "natural" else ORANGE
-        sz = 60 + 340 * d["drift"] / dmax
+        natural = d["type"] == "natural"
+        col = GREEN if natural else ORANGE
+        mk = "o" if natural else "s"          # circle = natural, square = reservoir
         kw = dict(transform=tf) if tf is not None else {}
-        ax.scatter(d["lon"], d["lat"], s=sz, c=col, edgecolor="black",
-                   lw=0.8, zorder=5, **kw)
+        ax.scatter(d["lon"], d["lat"], s=150, marker=mk, c=col, edgecolor="black",
+                   lw=0.8, zorder=5, **kw)     # uniform size for every lake
         dx, dy = off[k]
         ax.annotate(d["name"], xy=(d["lon"], d["lat"]),
                     xytext=(d["lon"] + dx, d["lat"] + dy), fontsize=14,
@@ -352,12 +352,12 @@ def fig_lake_map():
                     arrowprops=dict(arrowstyle="-", lw=0.5, color="#555"),
                     **(dict(transform=tf) if tf else {}))
     leg = [Line2D([0], [0], marker="o", color="w", markerfacecolor=GREEN,
-                  markeredgecolor="k", markersize=10, label="natural lake"),
-           Line2D([0], [0], marker="o", color="w", markerfacecolor=ORANGE,
-                  markeredgecolor="k", markersize=10, label="reservoir")]
+                  markeredgecolor="k", markersize=12, label="natural lake"),
+           Line2D([0], [0], marker="s", color="w", markerfacecolor=ORANGE,
+                  markeredgecolor="k", markersize=12, label="reservoir")]
     ax.legend(handles=leg, loc="lower left", fontsize=14, frameon=True)
     ax.set_title("Geographic distribution of the twelve demonstration lakes\n"
-                 "(marker size ∝ 36 h mean drift; 36°S to 60°N, all inhabited continents)",
+                 "(circles = natural lakes, squares = reservoirs; 36°S to 60°N, all inhabited continents)",
                  fontsize=18, pad=4)
     fig.savefig(DOCS / "figure_lake_map.png", dpi=300, bbox_inches="tight",
                 facecolor="white")

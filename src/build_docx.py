@@ -48,9 +48,9 @@ FIGS = {
         "(a) mean current speed with vectors, (b) surface temperature, "
         "(c) significant wave height — all from a single coupled FLOW+WAVE run."),
     "map": (ROOT / "docs/figure_lake_map.png", 5,
-        "Geographic distribution of the twelve demonstration lakes (marker size "
-        "proportional to 36 h mean drift), spanning all inhabited continents from "
-        "36°S to 60°N and both natural lakes and reservoirs."),
+        "Geographic distribution of the twelve demonstration lakes (circles, natural "
+        "lakes; squares, reservoirs), spanning all inhabited continents from "
+        "36°S to 60°N."),
     "demonstration": (ROOT / "output/figure_demonstration.png", 6,
         "The pipeline demonstrated across the twelve lakes: mean surface-current "
         "speed (per-lake colour scale) with 36 h particle trajectories (black), "
