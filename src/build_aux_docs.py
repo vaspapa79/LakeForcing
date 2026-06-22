@@ -34,7 +34,8 @@ def add_hyperlink(paragraph, url, text, size_hp="22"):
     run.append(t); hl.append(run); paragraph._p.append(hl)
 
 TITLE = ("LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for "
-         "OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake")
+         "hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian "
+         "transport models")
 
 HIGHLIGHTS = [
     "Open pipeline turns global open data into transport forcing for any inland lake",

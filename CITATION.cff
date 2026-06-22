@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 title: >-
   LakeForcing-OpenDrift: a sigma-to-z coupling algorithm and open pipeline for
-  OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake
+  hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models
 message: "If you use this software, please cite it as below."
 type: software
 authors:

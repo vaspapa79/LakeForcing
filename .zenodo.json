@@ -1,5 +1,5 @@
 {
-  "title": "LakeForcing-OpenDrift: a sigma-to-z coupling algorithm and open pipeline for OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake",
+  "title": "LakeForcing-OpenDrift: a sigma-to-z coupling algorithm and open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models",
   "description": "Open Python pipeline that assembles bathymetry (HydroLAKES/GLOBathy/DAHITI) and ERA5 meteorology, auto-configures and runs a coupled Delft3D-FLOW + Delft3D-WAVE simulation for any inland lake, and exports CF-compliant NetCDF that drives the OpenDrift particle tracker. Core contribution: a sigma-layer to z-level coupling (currents, temperature, water level and wave-driven Stokes drift). Demonstrated unchanged on 12 lakes on all inhabited continents (36S-60N); benchmarked against an expert-built reservoir model and against independent satellite lake-surface-temperature observations. The sigma-to-z exporter is covered by a continuous-integration test on a small bundled Delft3D fixture, so it runs with no Delft3D installation.",
   "upload_type": "software",
   "access_right": "open",

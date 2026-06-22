@@ -9,7 +9,8 @@ The methodological core is the **σ-layer → z-level coupling** that makes
 terrain-following Delft3D output readable by OpenDrift's fixed-depth reader.
 
 > Companion code for the manuscript *"LakeForcing-OpenDrift: a σ-to-z coupling algorithm and
-> open pipeline for OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake"*
+> open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian
+> transport models"*
 > (target: **Computers & Geosciences**; a companion dataset descriptor for *Data in Brief*
 > is planned). Draft: `paper/EMS_manuscript.md`.
 

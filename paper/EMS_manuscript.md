@@ -1,4 +1,4 @@
-# LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for OpenDrift-ready hydrodynamic and wind-wave forcing of any inland lake
+# LakeForcing-OpenDrift: a σ-to-z coupling algorithm and open pipeline for hydrodynamic and wind-wave forcing of inland lakes to drive Lagrangian transport models
 
 Vassilios Papaioannou^1,\*, Christos G. E. Anagnostopoulos^1, Anastasia Moumtzidou^1, Ilias Gialampoukidis^1, Stefanos Vrochidis^1, Ioannis Kompatsiaris^1
 
@@ -15,7 +15,7 @@ by the absence of ready-made forcing: ocean reanalyses stop at the coast, and la
 built by hand. We present LakeForcing-OpenDrift, an open, reproducible Python pipeline that
 assembles bathymetry and meteorology from open data, automatically runs a coupled
 Delft3D-FLOW/WAVE (SWAN) simulation for any lake, and exports CF-compliant NetCDF that drives
-the OpenDrift tracker unmodified. The computational core is a σ-to-z coupling algorithm,
+Lagrangian particle trackers unmodified. The computational core is a σ-to-z coupling algorithm,
 mapping terrain-following σ-layer fields to fixed z-levels with per-cell velocity rotation and
 a surface Stokes-drift derivation, that makes a hydrodynamic engine interoperable with a
 generic tracker. We demonstrate it, unchanged, on twelve lakes (36°S–60°N); against an
