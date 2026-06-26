@@ -1,0 +1,18 @@
+# LakeForcing twelve-lake forcing dataset — file manifest
+# CC-BY-4.0. SHA-256 checksums and sizes of the exported CF-NetCDF files.
+
+file                               size_MB  sha256
+balaton_forcing.nc                    30.5  a5b91d1b2afd1606f43972dd40961237053f61962d63d3aae0646a83e4a6cfe8
+bornos_forcing.nc                     54.6  263d62ee82858569e76aa9349183d8552f2aed15220527fcf4dde3fae3f7cae5
+erken_forcing.nc                      87.9  766d2fd11d45f13357dde2748a8dd2adc0f22b181ab49d3b23834b4d1ef1a308
+eucumbene_forcing.nc                 109.6  94d6f431b7aeab51bea481d39abe52d2de27a917dc9ca52069aacec2da79a6ce
+lagdo_forcing.nc                      72.7  05ba90352e6be71622e31f80679ce29b6a73d2b54eebcdb1ff13e102daf4e454
+mead_forcing.nc                      115.3  1b90ad1579d86c971d4b6ab2577ccf5115f5a4da81d2164ef43de68956bf195b
+nova_ponte_forcing.nc                123.6  28bffb964bdae3744f3585a6c4140bc6adeadc98aeadbc5cd3319519de59910e
+polyfytos_forcing.nc                  50.2  b2d044a5137e9555299bc824705ae2130ab2fea027f89c37fc4b097c0a9053f8
+poyang_forcing.nc                     80.0  d244559a47544154405bc4d56666777d1eff95ee4abc76021574794679f3d9df
+rotsee_forcing.nc                     22.2  9aa7e448d2489500b5e3489de9f9d9c740035083b2ae0ac4b98b909d4f651eb9
+sea_of_galilee_forcing.nc             69.2  d2ad183af199aa6756c4e865b399a4d77b60a931ae6e512fbece663a2c0325e0
+trasimeno_forcing.nc                  80.1  3351ee1b0480347f20ee0f8f87e150553475aea029f1c1d0c34b2491bfaaff3b
+
+TOTAL (12 files)                     896.0  (0.88 GiB)
