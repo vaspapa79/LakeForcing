@@ -20,6 +20,6 @@
   "related_identifiers": [
     { "relation": "isSupplementTo", "identifier": "https://github.com/vaspapa79/LakeForcing", "scheme": "url" }
   ],
-  "version": "1.2.0",
-  "notes": "This Zenodo record archives the LakeForcing source code (MIT). The generated twelve-lake forcing dataset (CC-BY-4.0) and full reproducibility data are distributed as release assets at https://github.com/vaspapa79/LakeForcing/releases."
+  "version": "1.2.1",
+  "notes": "This Zenodo record archives the LakeForcing source code (MIT) only. The generated twelve-lake forcing dataset (CC-BY-4.0; twelve <lake>_forcing.nc, ~0.9 GB uncompressed) is distributed separately as a GitHub release asset (LakeForcing-OpenDrift_forcing_dataset_v1.0.0.zip, ~0.7 GB), with a manifest (output/DATASET_MANIFEST.txt) of per-file sizes and SHA-256 checksums. Release assets are not embedded in this software archive."
 }

@@ -10,6 +10,8 @@ output/*
 # keep the two figures the manuscript embeds from output/
 !output/figure_demonstration.png
 !output/figure_vertical_sigma_z.png
+# keep the dataset checksum manifest (ships with the release, verifies the forcing files)
+!output/DATASET_MANIFEST.txt
 
 # Local working / private files
 Authors.docx

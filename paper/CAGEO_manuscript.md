@@ -18,9 +18,12 @@ Delft3D-FLOW/WAVE (SWAN) simulation for any lake, and exports CF-compliant NetCD
 Lagrangian particle trackers unmodified. The computational core is a σ-to-z coupling algorithm,
 mapping terrain-following σ-layer fields to fixed z-levels with per-cell velocity rotation and
 a surface Stokes-drift derivation, that makes a hydrodynamic engine interoperable with a
-generic tracker. We demonstrate it, unchanged, on twelve lakes (36°S–60°N); against an
-expert-built reference it reproduces surface temperature to 0.85 °C RMSE and current speed to
-1.5 cm s⁻¹. Toolchain and dataset are released openly.
+generic tracker. We demonstrate it, unchanged, on twelve lakes (36°S–60°N); in a consistency check against an
+expert-built reference model of one reservoir it reproduces that model's surface temperature to
+0.85 °C RMSE and current speed to 1.5 cm s⁻¹, and an independent satellite comparison bounds
+the absolute accuracy of the exported surface-temperature field. Toolchain and the twelve-lake
+forcing dataset are released openly with a pinned software environment and a continuous-integration
+test that reproduces the σ-to-z export from a clean checkout.
 
 **Keywords:** Lake hydrodynamics; Wind-wave modelling (SWAN); Sigma-to-z coupling;
 OpenDrift; Lagrangian particle tracking; Reproducible open-source workflow
@@ -123,7 +126,7 @@ transport forcing.
 | Hand-built per-lake hydrodynamic models | labour-intensive, non-reproducible | auto-generates the setup from open inputs |
 | 1-D vertical lake models (e.g., GLM) | no horizontal transport field | full 3-D currents + waves on a grid |
 | Site-specific transport frameworks (e.g., CaMPSim-3D) | configured per site and per engine | engine output exported to a generic CF reader |
-| OpenDrift native readers (ROMS, generic) | no Delft3D reader; σ-fields not ingestible | σ-to-z coupling bridges the gap |
+| Tracker native readers (e.g., ROMS-format, generic CF) | no Delft3D reader available; σ-fields not directly ingestible | σ-to-z coupling bridges the gap |
 | GLOBathy / HydroLAKES | static bathymetry only | adds physics-based currents + waves |
 | Idealised / analytical lake flow | no data, no waves/Stokes, no heat | data-driven FLOW+WAVE + Stokes |
 
@@ -264,9 +267,12 @@ approximation,
 
 in which the coefficients `a = 17.625` and `b = 243.04` °C are the least-squares-optimised
 Magnus constants of Alduchov and Eskridge (1996), an optimised form of the classical Magnus (1844) relation; this parameterisation keeps the
-saturation-pressure error below 0.4 % over the −40 to +50 °C range that spans realistic
+*saturation-vapour-pressure* error below 0.4 % over the −40 to +50 °C range that spans realistic
 lake-surface and air conditions, and is therefore preferable to the older Magnus–Tetens
-constants.
+constants. The 0.4 % figure is the error Alduchov and Eskridge (1996) optimised for the
+saturation vapour pressure itself; because the relative humidity here is formed as a ratio of
+two such approximations, its error can exceed this under large dew-point depressions, although
+it remains small for the near-surface, moist lake conditions sampled in this work.
 
 The third module writes the evaporation–precipitation forcing — precipitation, evaporation
 and rain temperature — that closes the surface water-mass balance. All three series share a
@@ -292,8 +298,8 @@ The generator writes the FLOW master-definition file (`.mdf`) and its run config
 with the following physical choices. Air–water exchange uses the Ocean heat-flux model
 (Delft3D heat model 5), which resolves the short-wave, long-wave, latent and sensible
 components separately from the meteorological forcing; the latent and sensible transfer are
-governed by Dalton and Stanton numbers of 0.0013, and the short-wave penetration by a
-prescribed Secchi depth. Vertical mixing is closed with the two-equation k–ε turbulence
+governed by a Dalton number of 0.0013 and a Stanton number of 0.0013 (both dimensionless bulk
+transfer coefficients), and the short-wave penetration by a prescribed Secchi depth. Vertical mixing is closed with the two-equation k–ε turbulence
 model (Umlauf and Burchard, 2003). The water column is discretised into 14 σ-layers
 progressively refined toward the surface, concentrating vertical resolution in the
 wind-driven shear layer that controls the transport of floating material. The
@@ -319,7 +325,7 @@ file-generation logic.
 | Vertical layers | 14 σ-layers, surface-refined | resolve surface shear for floating tracers |
 | Turbulence closure | k–ε (Umlauf and Burchard, 2003) | standard two-equation closure |
 | Heat flux | Ocean model (Delft3D model 5) | data-driven air–water exchange |
-| Dalton / Stanton number | 0.0013 / 0.0013 | bulk latent/sensible transfer |
+| Dalton number; Stanton number | 0.0013; 0.0013 | bulk latent; sensible transfer |
 | Density reference | freshwater (salinity 0) | inland lakes |
 | Coriolis | f from lake latitude | basin-scale rotation |
 | Waves | SWAN 3rd-gen, quadruplets on | wind-sea growth |
@@ -354,7 +360,14 @@ still-water bed depth d, whose sum is the total column thickness H = ζ + d:
 
 [[EQ:sigmaz]]
 
-with σ_{k} = 0 at the free surface and σ_{k} = −1 at the bed. The scalar and velocity fields
+with σ_{k} = 0 at the free surface and σ_{k} = −1 at the bed. The layer-centre fractions σ_{k}
+are read directly from the `SIG_LYR` variable of the Delft3D-FLOW `trim-*.nc` map file, together
+with the water level (`S1`), the still-water bed depth (`DPS`) and the grid-orientation angle
+(`ALFAS`); the exporter applies no vertical offset and only a single sign normalisation — builds
+that store the fractions positive-down on [0, 1] are negated once so that Eq. (4) always receives
+σ = 0 at the surface and σ = −1 at the bed, with the surface-most layer (the one whose σ tends to
+0) mapped to the top z-level. This fixes the orientation explicitly and removes any possibility of
+a silently inverted profile. The scalar and velocity fields
 are then interpolated in the vertical — by piecewise-linear interpolation in depth — from
 these reconstructed σ-centre depths onto the fixed z-level set {0, −1, −2, −3, −5, −7.5, −10,
 −15, −20, −30, −50} m. Two boundary treatments keep the result physically faithful: because
@@ -370,8 +383,11 @@ eleven levels are populated everywhere. The deepest level (−50 m) is, by desig
 than the maximum depth of the deepest basins (e.g., Polyfytos, ~80 m): the z-set is
 surface-focused because the tool targets near-surface, floating-material transport, so the
 weakly sheared structure below 50 m is intentionally not exported and is straightforward to
-extend if a deeper application requires it. Figure 3 shows the depth-resolved result for one
-lake.
+extend if a deeper application requires it. The target set is not hard-wired into the algorithm:
+it is a single exposed parameter (`Z_LEVELS` in `cf_export.py`, overridable from the exporter's
+command line), so a user targeting a deep or benthic application — Lake Baikal, say, or near-bed
+transport — changes it in one place without altering the reconstruction logic. Figure 3 shows the
+depth-resolved result for one lake.
 
 (2) Velocity rotation. Delft3D solves on a staggered (Arakawa C-type) curvilinear grid and
 returns the velocity as grid-aligned (ξ, η) components on the cell faces. These are first
@@ -391,8 +407,15 @@ Inactive and dummy cells are masked before reprojection, so that land and paddin
 cannot distort either the interpolation or the inferred grid extent.
 
 (4) Surface Stokes drift. The wave-driven drift is reconstructed from the SWAN output rather
-than read directly. From the significant wave height H_{s}, the peak period T_{p} and the
-mean propagation direction, a deep-water monochromatic approximation yields the surface
+than read directly. The three inputs are taken from named fields of the Delft3D-WAVE map file
+(`wavm-*.nc`): the significant wave height H_{s} from `HSIGN`, the peak period T_{p} from `RTP`
+(SWAN's relative peak period, i.e. the period at the spectral peak — not an integral mean period
+such as `TM01` or `TMM10`), and the mean propagation direction from `DIR`. These fields are
+requested in the output section of the `.mdw` control file written by the wave generator
+(Section 2.4), so the mapping from SWAN variable to equation input is fixed and explicit.
+Stating it removes the principal ambiguity in reusing Eq. (6), because selecting a mean period in
+place of `RTP` would bias the Stokes magnitude by a factor of order two. From these,
+a deep-water monochromatic approximation yields the surface
 Stokes-drift magnitude (consistent with Breivik et al., 2014; van den Bremer and Breivik,
 2018):
 
@@ -432,12 +455,19 @@ field is not exactly non-divergent. This is appropriate for the intended use. Op
 advects particles kinematically — it samples the interpolated velocity at each particle
 position and integrates the trajectory — and so does not require a divergence-free or
 flux-conservative field, unlike an Eulerian transport solver. To bound the magnitude of the
-effect we compared the depth-integrated horizontal transport of the regridded field with
-that of the native model output over the wet domain of a representative lake; the median
-relative discrepancy is about 2 % (rising in the slowest cells, where a relative measure is
-most sensitive), small relative to the velocity uncertainty inherited from the forcing. Users who instead couple the exported fields to a conservative Eulerian advection
-scheme should re-derive transports on the native curvilinear grid rather than from the
-exported raster.
+effect we compared the depth-integrated horizontal transport of the regridded field with that of
+the native model output, per wet column, across lakes spanning the full depth range of the test
+set. The *median* relative discrepancy is small and, importantly, does not grow systematically as
+the basin shoals: it is about 2.1 % for the moderate-depth Bornos (~20 m), about 2.0 % for the
+shallow Sea of Galilee (~6 m) and about 0.5 % for the shallow Poyang (~6 m), and about 0.9 % for
+the deep Mead (~40 m) — so the linear σ-to-z step does not introduce a qualitatively larger error
+in the shallow basins, where fewer z-levels sample the column, than in the deep ones. The
+per-column *mean* is larger (up to ~10 % in some lakes) but is dominated by the slowest cells,
+where a *relative* error measure is ill-conditioned because its denominator vanishes; the absolute
+transport error there remains small. All of these discrepancies are small relative to the velocity
+uncertainty inherited from the forcing. Users who instead couple the exported fields to a
+conservative Eulerian advection scheme should re-derive transports on the native curvilinear grid
+rather than from the exported raster.
 
 [[FIG:vertical]]
 
@@ -529,7 +559,12 @@ six functional layers:
 A separate, self-contained tooling layer (`make_figures.py`, `make_equations.py`,
 `build_docx.py`) regenerates every figure, the equation set and this manuscript directly
 from the produced data, so that the reported results and the document itself are
-reproducible artefacts of the same repository.
+reproducible artefacts of the same repository. The submitted Word document is itself the output
+of `build_docx.py` rendering the manuscript source (`paper/CAGEO_manuscript.md`): the equations are
+emitted as native Office Math (OMML) from `omml_equations.py` and the figures are the very files
+written by `make_figures.py`, so the displayed equations and figures are, by construction,
+identical to those the pipeline produces. The README documents the single command that rebuilds the
+document.
 
 ### 3.2 Implementation, dependencies and usage
 
@@ -537,10 +572,25 @@ The implementation is pure Python 3.11 and deliberately rests on a small, widely
 scientific stack: `xarray` and `netCDF4` for labelled-array and CF-NetCDF input/output,
 `numpy` and `scipy` for the numerics and the distance transform, `pyproj` and `rasterio`
 for projection and raster access, `cdsapi` for ERA5 retrieval, and `matplotlib` with
-`cartopy` for visualisation. The Lagrangian demonstration uses OpenDrift 1.14.9; the
-hydrodynamic engine, Delft3D 4.07.01 (FLOW + WAVE/SWAN), is the only heavyweight,
-non-Python dependency and is installed separately — a deliberate choice to wrap, rather
-than reimplement, a community-validated solver.
+`cartopy` for visualisation. To make the environment reproducible, the repository root carries a
+`requirements.txt` that pins the packages whose minor releases have broken backward compatibility
+in this stack — the Lagrangian demonstration is pinned to `opendrift==1.14.9` — and recommends a
+conda-forge Python 3.11 environment (so that `rasterio`/`pyproj` bind to a consistent GDAL/PROJ
+build, the usual source of cross-platform breakage); the remaining pure-Python packages are
+tolerant of patch-level drift. The twelve-lake runs reported here were produced on Windows 11
+(64-bit); the pipeline also runs on 64-bit Linux.
+
+The hydrodynamic engine, Delft3D 4.07.01 (FLOW + WAVE/SWAN), is the only heavyweight, non-Python
+dependency and is installed separately — a deliberate choice to wrap, rather than reimplement, a
+community-validated solver. We did not build Delft3D from source: the reported runs used the
+official Deltares pre-built Delft3D 4 binary distribution (tagged release 4.07.01, obtained from
+the Deltares open-source portal, oss.deltares.nl/web/delft3d), executed on Windows 11 (64-bit)
+through the distribution's own launch scripts. Using the vendor binary rather than a local build
+means the FLOW/WAVE results do not depend on a user's compiler, MPI variant or patch level; the
+exact version tag and download reference are recorded in the README and the Software-availability
+table. Because reproducing the full hydrodynamic runs nonetheless requires this external engine,
+the σ-to-z export — the pipeline's most reusable component — is made independently reproducible
+without it, as described below.
 
 In normal use a lake is processed with two commands that bracket the external engine run:
 `setup_lake.py` stages the grid, forcing and model-definition files from open data; the
@@ -548,14 +598,40 @@ user (or a batch script) then executes the Delft3D FLOW and WAVE runs; and
 `postprocess_lake.py` performs the σ-to-z export and the transport demonstration. The only
 per-lake inputs required are the lake location, its latitude (for the Coriolis parameter)
 and a seasonal initial water temperature; an ERA5 Copernicus CDS account is needed for the
-meteorological retrieval. Because the exporter depends only on the engine output and not on
+meteorological retrieval. The retrieval is fully specified in the `get_era5_*.py` modules and is
+documented in the README so that it survives the ongoing CDS migration: all three modules call
+`cdsapi` against the `reanalysis-era5-single-levels` dataset with `product_type: reanalysis` and
+request the exact short-names `10m_u_component_of_wind` and `10m_v_component_of_wind` (wind);
+`2m_temperature`, `2m_dewpoint_temperature`, `total_cloud_cover` and
+`surface_solar_radiation_downwards` (heat flux); and `total_precipitation`, `evaporation` and
+`2m_temperature` (mass balance). Because the legacy CDS API was retired in favour of the new
+Climate Data Store (CDS-Beta) endpoint in 2024–2025, the README states the `cdsapi` version
+confirmed against the current endpoint and the steps a new user must follow to obtain CDS
+credentials and write `~/.cdsapirc`; the variable names above are unchanged across the migration,
+so only the endpoint and key configuration differ. River discharge is supported as an optional
+open-boundary condition (used for the Polyfytos comparison of Section 5.6 and configured through
+`_build_river_config.py`); it is exercised in that benchmark but is not covered by the
+continuous-integration test, and is flagged accordingly in the Software-availability table.
+Because the exporter depends only on the engine output and not on
 how the run was configured, it can also be used on its own: pointing `cf_export.py` at the
 output of any pre-existing Delft3D-FLOW/WAVE lake model converts that model's fields into
 OpenDrift-ready CF-NetCDF — the component of the pipeline with the broadest independent
 utility. To make this component reproducible without the heavyweight engine, the repository
-bundles a small Delft3D sample under `tests/` together with a continuous-integration test
-that runs the exporter on it and checks the CF output, so the σ-to-z coupling can be
-exercised from a clean checkout with no Delft3D installation.
+bundles a small Delft3D sample under `tests/fixtures/` together with a continuous-integration test
+that runs the exporter on it and checks the CF output, so the σ-to-z coupling can be exercised from
+a clean checkout with no Delft3D installation. The fixture and the check are described concretely
+so that any discrepancy can be localised to the data or the code. The fixture is a subset of the
+smallest demonstration lake, Erken (UTM zone 34N, EPSG:32634): the FLOW map file
+`trim-erken_mini.nc` keeps the first two output time steps and only the variables the exporter
+reads, on the lake's 125×52 horizontal grid with 14 σ-layers, and the wave map file
+`wavm-erken_mini.nc` is the corresponding SWAN output; both are produced from the full Erken run by
+the versioned `tests/build_fixture.py` and are committed (and checksummed) with the repository. The
+test (`tests/test_cf_export.py`) asserts quantitatively that the exporter exits cleanly, that the
+output declares CF `Conventions`, that the headline variables `u`, `v`, `temp`, `zeta` and `Hs` are
+present with the CF `standard_name` attributes OpenDrift keys on (e.g. `u` →
+`x_sea_water_velocity`), that the z-levels are monotonic downward with the surface at 0 m and
+levels below the bed masked, that the exported longitude/latitude axes are monotonic increasing,
+and that the wet surface contains finite current cells.
 
 ---
 
@@ -594,14 +670,18 @@ surface current speed; H_{s,max} = maximum significant wave height. The drift co
 five-point release-point ensemble (Section 5.3), and the floating-litter case with 2 % windage
 added (Section 5.2). Comparing the ensemble median with the single-release value shows that the
 cross-lake ranking is robust (Spearman ρ = 0.74) while individual magnitudes are seed-sensitive,
-most strongly in basins with sheltered arms (Lagdo, Rotsee, Erken).
+most strongly in basins with sheltered arms (Lagdo, Rotsee, Erken). All twelve lakes are
+auto-generated by the pipeline from open data **except Polyfytos**, which reuses an expert-built,
+hand-configured model (bold row, asterisk); it is the only row that does not demonstrate the
+pipeline's autonomous setup and should be read as the export-path control (Section 5.6), not as an
+auto-generated case.
 
 | Lake | Country | Regulation | Lat | Max depth (m) | Mean depth (m) | \|U\|_{max} (m/s) | H_{s,max} (m) | Drift, current+Stokes (m) | Drift, ensemble median (m) | Drift, +windage (m) |
 |---|---|---|--:|--:|--:|--:|--:|--:|--:|--:|
 | Lagdo | Cameroon | reservoir | 8.8 | ~9 | 4.5 | 0.030 | 0.39 | 2439 | 850 | 1970 |
 | Bornos | Spain | reservoir | 36.8 | ~20 | 8.0 | 0.028 | 0.21 | 1337 | 2520 | 5166 |
 | Mead | USA | reservoir | 36.3 | ~40 | 20.0 | 0.049 | 0.51 | 2933 | 3220 | 8315 |
-| Polyfytos* | Greece | reservoir | 40.2 | ~80 | 30.0 | 1.18 | 0.32 | 1743 | 2560 | 5874 |
+| **Polyfytos\* (hand-built)** | Greece | reservoir | 40.2 | ~80 | 30.0 | 1.18 | 0.32 | 1743 | 2560 | 5874 |
 | Trasimeno | Italy | natural | 43.1 | ~7 | 4.7 | 0.012 | 0.33 | 3419 | 3320 | 2047 |
 | Balaton | Hungary | natural | 46.9 | ~9 | 3.2 | 0.005 | 0.36 | 3250 | 2950 | 4854 |
 | Rotsee | Switzerland | natural | 47.1 | ~16 | 9.0 | 0.018 | 0.14 | 341 | 260 | 819 |
@@ -611,8 +691,9 @@ most strongly in basins with sheltered arms (Lagdo, Rotsee, Erken).
 | Eucumbene | Australia | reservoir | −36.1 | ~38 | 18.0 | 0.052 | 0.33 | 3166 | 3440 | 9189 |
 | Nova Ponte | Brazil | reservoir | −19.1 | ~23 | 11.0 | 0.030 | 0.41 | 2881 | 3470 | 8803 |
 
-\*Polyfytos reuses a hand-built model that includes river discharges, hence its larger
-peak currents; the other eleven are auto-generated closed-lake setups. †For Sea of
+\*Polyfytos (bold row) is **not auto-generated**: it reuses an expert-built, hand-configured
+Delft3D model that includes river discharges, hence its larger peak currents; the other eleven are
+auto-generated closed-lake setups produced by the pipeline from open data alone. †For Sea of
 Galilee the value is the DAHITI satellite-observed depth band, not the absolute maximum
 depth (Section 6).
 
@@ -659,8 +740,9 @@ circulation, temperature and waves (Section 5.1) — then the surface transport 
 physically expected way (Section 5.3). Section 5.4 reports an automated quality-control
 audit of the complete dataset and the single artefact it revealed, and Section 5.5 situates
 the results relative to existing lake-modelling and transport tools. The final two
-subsections test the forcing against external references: Section 5.6 benchmarks the
-auto-generated configuration against an expert-built model of one reservoir, and Section 5.7
+subsections test the forcing against reference fields: Section 5.6 checks the
+auto-generated configuration for consistency against an expert-built model of one reservoir (a prior
+model from the same group, not an independent third party), and Section 5.7
 compares the exported surface temperature with independent satellite observations for four
 further lakes. Throughout, no parameter was tuned per lake, so the comparisons that follow
 are between lakes rather than between hand-fitted models.
@@ -724,8 +806,8 @@ the wind opposes the current and Stokes drift (Sea of Galilee 3.5 to 1.1 km, Tra
 3.4 to 2.0 km). Windage therefore typically dominates the net displacement of floating
 material — as it does in marine-debris studies (Chenillat et al., 2021; Iskandar et al.,
 2022), and with field surveys of macroplastic transport in transitional waters (Tramoy et al., 2020) — while the current and Stokes fields set the
-lake-specific spatial structure of the trajectories. Reporting both cases make the relative
-roles explicit and exercise every exported field (currents, Stokes drift and wind).
+lake-specific spatial structure of the trajectories. Reporting both cases makes the relative
+roles explicit and exercises every exported field (currents, Stokes drift and wind).
 
 [[FIG:demonstration]]
 
@@ -739,7 +821,15 @@ maximum fetch (ρ = +0.57, p = 0.06); it correlates negatively with depth (ρ = 
 mean depth and −0.57 with maximum depth, p ≈ 0.05–0.06) and shows essentially no relation to
 mean wind speed (ρ = +0.04). With twelve lakes only the surface-area correlation reaches
 significance at the 5 % level, so we read these as physically coherent rank tendencies:
-surface transport is enhanced by basin size and fetch and damped by depth. That depth is not
+surface transport is enhanced by basin size and fetch and damped by depth. Because Polyfytos is
+the one hand-built outlier in the set (a calibrated model with river discharges), we also recomputed
+the primary area–drift correlation with it removed: over the eleven auto-generated lakes the rank
+correlation weakens to ρ = +0.54 (p = 0.09) — still positive and of the same sign and magnitude,
+but no longer significant at the 5 % level. The significance of the twelve-lake result is therefore
+partly carried by Polyfytos, and we present the area–drift relation as a coherent tendency rather
+than an established law; the eleven auto-generated lakes alone support the same direction at marginal
+significance. (The other predictors are essentially unchanged by the exclusion: fetch ρ = +0.58,
+depth ρ ≈ −0.5, wind ρ = +0.20.) That depth is not
 the sole control is clear within the set — the deep Eucumbene (~38 m) and the comparably deep
 Mead (~40 m) both drift about 3 km, because both are large, long-fetch basins — so basin size
 and wind exposure, not depth alone, govern the outcome. Mechanistically, shallow wide basins couple the wind stress into a thin,
@@ -782,8 +872,11 @@ solar-heated cell has negligible thermal inertia and overheats within one diurna
 physical temperature cap of 35 °C is applied in the export to suppress these spikes, while
 basin-interior temperatures — realistic throughout, for example 17–24 °C in Rotsee,
 15–26 °C in Erken and 2–10 °C in the winter Eucumbene — are left unchanged. The artefact is
-confined to thin-cell shorelines and does not affect the currents or waves that drive
-transport. The cap is deliberately an interim, post-hoc safeguard: the principled fix is a
+confined to thin-cell shorelines and does not affect the currents or waves that drive transport;
+accordingly, although the drift statistics in Table 3 are computed on the exported (post-cap)
+fields, they are unaffected by the cap, because the advection is driven by the currents, the
+surface Stokes drift and the wind — none of which the temperature cap touches — and not by the
+temperature field itself. The cap is deliberately an interim, post-hoc safeguard: the principled fix is a
 minimum-depth (wetting–drying) threshold applied inside the FLOW solver, which we did not
 enable here because it requires per-lake tuning of the drying threshold and so would
 compromise the single, uniform, untuned configuration that is central to the
@@ -798,29 +891,37 @@ solver but the automation and coupling that turn a community-validated 3-D engin
 forcing generator for a generic particle tracker. Relative to site-specific
 transport frameworks such as CaMPSim-3D (Pilechi et al., 2022), which couple a particle
 model to one particular hydrodynamic engine on a per-study basis, LakeForcing
-instead targets a generic CF reader: the same exported forcing can drive OpenDrift or
-Parcels (Delandmeter and van Sebille, 2019) without change, and the same workflow applies
-to any lake. We note that this Parcels compatibility follows by construction from the shared
-CF-NetCDF interface and was not separately tested here; only the OpenDrift path is
-demonstrated. Of the pipeline's parts, the σ-to-z export has the broadest independent reach,
+instead targets a generic CF reader: the exported forcing is written to the CF-NetCDF interface
+that generic Lagrangian readers consume, and the same workflow applies to any lake. Only the
+OpenDrift path is demonstrated and tested here (OpenDrift 1.14.9). We expect the same files to
+drive other CF-reading trackers such as Parcels (Delandmeter and van Sebille, 2019) by
+construction, since nothing in the export is OpenDrift-specific, but we have not verified a Parcels
+run and therefore leave that compatibility as a stated expectation and an item of future work
+rather than a demonstrated result; Parcels is not listed as a tested dependency. Of the pipeline's parts, the σ-to-z export has the broadest independent reach,
 since it is independent of run configuration and can make any existing Delft3D-FLOW/WAVE
 lake model OpenDrift-ready by being pointed at its output. Finally, we are explicit about
 scope: the present results establish physical plausibility and internal consistency across a
-wide range of lakes, together with a model-to-model benchmark (Section 5.6) and an
+wide range of lakes, together with a same-group model-to-model consistency check (Section 5.6) and an
 independent satellite check of the exported surface-temperature field (Section 5.7), rather
 than full validation against in-situ drifter or current observations. Such quantitative
 hydrodynamic validation is the natural next step, and it is enabled — not foreclosed — by
 releasing the forcing openly.
 
-### 5.6 Benchmark against an expert-built reference model
+### 5.6 Consistency check against an expert-built reference model from the same group
 
-To test the automated forcing against an independent reference, we ran the pipeline's
+To test the automated forcing against an external reference model, we ran the pipeline's
 auto-generated closed-lake configuration on the exact grid of the peer-reviewed,
 expert-built Polyfytos model (Papaioannou et al., 2025) and compared the two over their
-shared 54,520-cell wet domain (Fig. 8). The hand-built model is expert-configured and
-includes the reservoir's river discharges; the auto configuration applies only the
-pipeline's standard closed-lake defaults (Table 2), with no hand tuning and no discharge.
-We are explicit about the standing of this reference. The model of Papaioannou et al. (2025)
+shared 54,520-cell wet domain (Fig. 8). We state at the outset that this reference is not an
+independent third-party model: Papaioannou et al. (2025) is the present authors' own previously
+published, hand-built model of the same reservoir. The comparison is therefore best read as an
+internal *consistency check* — does the automated configuration reproduce a careful, manually
+configured realisation of the same basin built by the same group? — rather than as an independent
+validation, and we have been careful not to let it carry more evidential weight than that. The
+hand-built model is expert-configured and includes the reservoir's river discharges; the auto
+configuration applies only the pipeline's standard closed-lake defaults (Table 2), with no hand
+tuning and no discharge. We are equally explicit about the standing of this reference as a
+modelling reference. The model of Papaioannou et al. (2025)
 is an expert-configured Delft3D-FLOW/WRF model whose meteorological forcing was validated
 against two local meteorological stations and whose surface-temperature dynamics were
 calibrated against high-frequency in-situ measurements, while a formal validation of its
@@ -863,7 +964,14 @@ counter-clockwise grid the pipeline generates for SWAN — so there is no indepe
 field against which to compute an Hs bias. This detail also makes Section 2.2 concrete: the
 FLOW grid reused here is clockwise, which Delft3D-FLOW tolerates, so the wave step must run
 on the pipeline's counter-clockwise grid rather than the FLOW grid — exactly the orientation
-the automated grid generation enforces by construction. On a standard multi-core desktop
+the automated grid generation enforces by construction. This raises no additional grid-mapping
+error in the export, because the two engine outputs are never interpolated onto each other: the
+σ-to-z exporter regrids the FLOW fields and the SWAN fields *independently* onto the common regular
+longitude/latitude raster of Section 2.5 (the FLOW currents from their curvilinear grid, the wave
+parameters from SWAN's counter-clockwise grid), so the only horizontal interpolation either field
+undergoes is the single curvilinear/CCW-to-regular step already discussed there. There is no
+back-mapping of the SWAN output onto the FLOW domain, and hence no extra interpolation error
+beyond the one bounded in Section 2.5. On a standard multi-core desktop
 workstation the per-lake cost is dominated by the
 Delft3D run: this 236×233×14, 48 h FLOW simulation completed in about 19 min of wall-clock
 time, with grid construction, ERA5 retrieval, automated model generation and the σ-to-z
@@ -879,12 +987,24 @@ observations we compared the auto-generated surface temperature with satellite l
 water temperature (LSWT). For four of the demonstration lakes — Bornos (Spain), Lake Mead
 (USA), Trasimeno (Italy) and the Southern-Hemisphere winter reservoir Nova Ponte (Brazil) —
 a near-cloudless Landsat-8/9 Collection-2 Level-2 thermal-band overpass (Vermote et al., 2016) falls within, or
-within two days of, the 1–3 July 2022 simulation window. From each scene we built a
-clear-water skin-temperature field (using the Collection-2 `QA_PIXEL` water and cloud flags),
-binned it onto the model grid, and compared it with the exported surface temperature at the
-local hour of the diurnal warming peak (Fig. 9). The four lakes are all auto-generated, so
-this tests the pipeline's own heat-flux forcing rather than the prescribed temperature of the
-hand-built reference.
+within two days of, the 1–3 July 2022 simulation window. From each scene we took the
+Collection-2 Level-2 surface-temperature (thermal) band, converted the digital numbers to kelvin
+with the standard Landsat scaling, and built a clear-water skin-temperature field by retaining only
+pixels flagged water-and-clear in the `QA_PIXEL` bit mask (rejecting cloud, shadow, cirrus and
+land). The native thermal field — loaded in geographic coordinates at roughly 30–60 m depending on
+basin size — was then aggregated onto the coarser model grid by *averaging* all satellite pixels
+falling within each model cell (an area-mean bin, not nearest-neighbour), giving a like-for-like
+basin field. We compared this against the exported surface temperature at the model time step of
+maximum basin-mean temperature — the model's own diurnal warming peak, which falls close to the
+early-afternoon Landsat overpass — with the satellite UTC stamp shifted into the lake's local time
+zone (the model's time axis, Section 2.3) before matching. One systematic difference is left
+uncorrected and should be borne in mind: the satellite measures a radiometric *skin* temperature,
+whereas the model carries a *bulk* surface temperature, and we applied no skin-to-bulk adjustment;
+under daytime insolation the skin typically runs of order 0.2–0.5 K cooler than the bulk, a
+systematic that is small against the 4–5 °C warm-lake offset discussed below but is comparable to
+the sub-0.2 °C agreement at the winter control and so should not be over-interpreted there. The four
+lakes are all auto-generated, so this tests the pipeline's own heat-flux forcing rather than the
+prescribed temperature of the hand-built reference.
 
 The comparison is informative precisely because it is unflattering in one respect and
 reassuring in another. The three Northern-Hemisphere summer lakes run cold relative to the
@@ -1017,7 +1137,8 @@ not yield the largest drift; the accompanying morphometric ordering — a
 significant positive rank correlation of drift with surface area (ρ = +0.63, p = 0.03) and
 weaker tendencies with fetch and depth — reproduces the directions reported observationally
 for lake-plastic retention (Nava et al., 2023; Chen et al., 2024); with twelve lakes only the
-area correlation is significant, and the weaker tendencies are presented as physically
+area correlation is significant — and it weakens to marginal (ρ = +0.54, p = 0.09) once the one
+hand-built lake, Polyfytos, is excluded — so the weaker tendencies are presented as physically
 coherent rank tendencies rather than as established laws. An automated audit
 confirmed the structural and physical integrity of all twelve exported datasets, and an
 independent satellite comparison bounded the absolute accuracy of the exported
@@ -1044,17 +1165,18 @@ steps.
 | Contact | Vassilios Papaioannou — vaspapa@iti.gr; CERTH-ITI, 6th km Charilaou-Thermi, 57001 Thessaloniki, Greece |
 | Year first available | 2025 |
 | Programming language | Python 3.11 |
-| Software dependencies | xarray, numpy, scipy, pyproj, rasterio, netCDF4, cdsapi, matplotlib, cartopy; OpenDrift 1.14.9 |
-| External hydrodynamic engine | Delft3D 4.07.01 (FLOW + WAVE/SWAN), installed separately |
-| External data services | ERA5 (Copernicus CDS account required); HydroLAKES; GLOBathy; DAHITI |
-| Operating systems | Windows and Linux (64-bit) |
+| Software dependencies | Pinned in `requirements.txt` (conda-forge Python 3.11 recommended): `opendrift==1.14.9`, plus xarray, numpy, scipy, pyproj, rasterio (GDAL/PROJ via conda-forge), netCDF4, cdsapi, matplotlib, cartopy |
+| External hydrodynamic engine | Delft3D 4.07.01 (FLOW + WAVE/SWAN), installed separately. Reported runs used the official Deltares pre-built Windows-x64 binary, release tag 4.07.01, from oss.deltares.nl/web/delft3d (no local build; vendor compiler/flags) |
+| External data services | ERA5 via `cdsapi` (dataset `reanalysis-era5-single-levels`, `product_type: reanalysis`; variable short-names listed in §3.2 and the README; Copernicus CDS account and `~/.cdsapirc` required); HydroLAKES; GLOBathy; DAHITI |
+| Operating systems | Windows 11 (64-bit) for the reported runs; also runs on 64-bit Linux |
 | Hardware requirements | Standard workstation; a multi-core CPU is recommended for the Delft3D-FLOW/WAVE runs |
+| Optional features | River-discharge open boundary (used in §5.6, configured via `_build_river_config.py`); supported but **not** exercised by the CI test |
 | Source-code size | approximately 0.2 MB (excluding generated data) |
 | Code versioning system | git |
-| Documentation | Repository README and the present manuscript |
+| Documentation | Repository README (Delft3D version/tag, ERA5/CDS variable names and credential setup, fixture provenance, and the `build_docx.py` manuscript-rebuild command) and the present manuscript |
 | Source repository | https://github.com/vaspapa79/LakeForcing |
 | Permanent archive | Zenodo (concept DOI, latest version): https://doi.org/10.5281/zenodo.20627160 |
-| Reproducible test capsule | A small Delft3D sample in `tests/fixtures/` runs the σ-to-z exporter via `pytest` and GitHub-Actions CI with no Delft3D install; full hydrodynamic runs require the external engine |
+| Reproducible test capsule | A versioned, checksummed Erken subset in `tests/fixtures/` (`trim-erken_mini.nc`, 125×52 grid, 14 σ-layers, 2 time steps, EPSG:32634; `wavm-erken_mini.nc`), built by `tests/build_fixture.py`, runs the σ-to-z exporter via `pytest`/GitHub-Actions CI with no Delft3D install and asserts CF compliance and the headline variables (§3.2); full hydrodynamic runs require the external engine |
 | Licence | MIT (source code); CC-BY-4.0 (generated forcing dataset) |
 | Availability and cost | Free and open source |
 
@@ -1069,10 +1191,17 @@ The authors declare that they have no known competing financial interests or per
 relationships that could have appeared to influence the work reported in this paper.
 
 ## Data availability
-The generated twelve-lake forcing dataset (CC-BY-4.0) and the full reproducibility data are
-distributed as release assets of the GitHub repository and archived on Zenodo at
-https://doi.org/10.5281/zenodo.20627160. All input datasets (HydroLAKES, GLOBathy, DAHITI,
-ERA5) are openly available from their respective providers.
+The generated twelve-lake forcing dataset (CC-BY-4.0) consists of the twelve exported CF-compliant
+NetCDF files (`<lake>_forcing.nc`, one per lake of Table 3; about 0.9 GB uncompressed). It is
+distributed as a versioned GitHub release asset of the source repository
+(`LakeForcing-OpenDrift_forcing_dataset_v1.0.0.zip`, about 0.7 GB compressed), accompanied by a
+manifest (`DATASET_MANIFEST.txt`) that lists each file's size and SHA-256 checksum so that the
+contents can be verified against Section 4. The source code is separately archived on Zenodo at
+https://doi.org/10.5281/zenodo.20627160 (concept DOI), which deposits the repository snapshot under
+the MIT licence; the forcing dataset, being a large generated product under a different licence
+(CC-BY-4.0), is released alongside the code as the GitHub release asset rather than embedded in the
+software archive. All input datasets (HydroLAKES, GLOBathy, DAHITI, ERA5) are openly available from
+their respective providers.
 
 ## Code availability
 The source code is openly available at https://github.com/vaspapa79/LakeForcing under the
